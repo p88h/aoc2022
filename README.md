@@ -51,7 +51,7 @@ $ dotnet run -c Release vis 00
 Raylib visualisations dump the generated frames into the tmp/ directory, which requires some post-processing:
 
 ```
-$ ffmpeg -i tmp/frame%05d.png -r 30 video.mp4
+$ ffmpeg -framerate 60 -pattern_type glob -i 'tmp/frame*.png' video.mp4
 $ rm tmp/frame*.png
 ```
 
