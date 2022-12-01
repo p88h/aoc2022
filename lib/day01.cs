@@ -1,7 +1,7 @@
 namespace aoc2022 {
     public class Day01 : Solution {
-        private List<int> data = new List<int>();
-        private List<int> sums = new List<int>();
+        public List<int> data = new List<int>();
+        public List<int> sums = new List<int>();
         public void parse(List<string> input) {
             foreach (var s in input) {
                 if (s.Length > 0) {
