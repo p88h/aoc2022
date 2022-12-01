@@ -39,6 +39,7 @@ namespace aoc2022 {
                     inputDays.Add(f.Substring(idx - 2, 2));
                 }
                 if (!runAll) {
+                    inputDays.Sort();
                     inputDays.RemoveRange(0, inputDays.Count() - 1);
                 }
             }
