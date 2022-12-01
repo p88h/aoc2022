@@ -1,36 +1,19 @@
 namespace aoc2022 {
     public class Day01 : Solution {
-        public List<int> data = new List<int>();
+        public List<int> data = new List<int>() { 0 };
         public List<int> sums = new List<int>();
         public void parse(List<string> input) {
-            foreach (var s in input) {
-                if (s.Length > 0) {
-                    data.Add(int.Parse(s));
-                } else {
-                    data.Add(0);
-                }
-            }
-            data.Add(0);
+            data = input.Select(s => (s.Length > 0) ? int.Parse(s) : 0).ToList();
         }
 
         public string part1() {
-            int sum = 0;
-            int max = 0;
-            foreach (var n in data) {
-                if (n > 0) {
-                    sum += n;
-                } else {
-                    if (sum > max) max = sum;
-                    sums.Add(sum);
-                    sum = 0;
-                }
-            }
-            return max.ToString();
+            sums = new List<int>(data.Count) { 0 };
+            foreach (var n in data) if (n == 0) sums.Add(0); else sums[sums.Count - 1] += n;
+            return sums.Max().ToString();
         }
 
         public string part2() {
-            int tot3 = sums.OrderByDescending(n => n).Take(3).Sum();
-            return tot3.ToString();
+            return sums.OrderByDescending(n => n).Take(3).Sum().ToString();
         }
     }
 }
