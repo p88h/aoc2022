@@ -13,7 +13,8 @@ namespace aoc2022 {
         }
 
         public string part2() {
-            return sums.OrderByDescending(n => n).Take(3).Sum().ToString();
+            sums.Sort();
+            return sums.TakeLast(3).Sum().ToString();
         }
     }
 }

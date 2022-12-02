@@ -6,11 +6,15 @@ namespace aoc2022 {
         }
 
         public string part1() {
-            return data.Select(s => ((s[2] - s[0] - 1) % 3) * 3 + (s[2] - 'X' + 1)).Sum().ToString();
+            int t = 0;
+            foreach (var s in data) { t += ((s[2] - s[0] - 1) % 3) * 3 + (s[2] - 'X' + 1); }
+            return t.ToString();
         }
 
         public string part2() {
-            return data.Select(s => ((s[0] - 'A' + s[2] - 'X' + 2) % 3) + 1 + (s[2] - 'X') * 3).Sum().ToString();
+            int t = 0;
+            foreach (var s in data) { t += ((s[0] - 'A' + s[2] - 'X' + 2) % 3) + 1 + (s[2] - 'X') * 3; }
+            return t.ToString();
         }
     }
 }

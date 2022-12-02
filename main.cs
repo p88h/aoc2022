@@ -14,9 +14,18 @@ namespace aoc2022 {
             }
             stopwatch.Stop();
             time = stopwatch.ElapsedMilliseconds;
+            int mul = 1;
+            string unit = " ms";
+            if (count > 1000000) {
+                mul = 1000000;
+                unit = " ns";
+            } else if (count > 1000) {
+                mul = 1000;
+                unit = " µs";
+            }
             long its = (1000 * count) / time;
-            long npi = (time * 1000000) / count;
-            Console.WriteLine(prefix + npi + " ns, " + its + " it/s");
+            long npi = (time * mul) / count;
+            Console.WriteLine(prefix + npi + unit + "/it, " + its + " it/s");
         }
 
         public static void Main(string[] args) {
@@ -38,10 +47,12 @@ namespace aoc2022 {
                     int idx = f.LastIndexOf('.');
                     inputDays.Add(f.Substring(idx - 2, 2));
                 }
+                inputDays.Sort();
                 if (!runAll) {
-                    inputDays.Sort();
                     inputDays.RemoveRange(0, inputDays.Count() - 1);
                 }
+            } else {
+                inputDays.Sort();
             }
 
             Console.WriteLine("Selected days: " + String.Join(",", inputDays));
