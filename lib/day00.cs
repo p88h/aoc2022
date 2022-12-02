@@ -1,16 +1,13 @@
 namespace aoc2022 {
-    public class Day00 : Solution
-    {
+    public class Day00 : Solution {
         private List<int> data = new List<int>();
-        public void parse(List<string> input)
-        {
+        public void parse(List<string> input) {
             foreach (var s in input) {
                 data.Add(int.Parse(s));
             }
         }
 
-        public string part1()
-        {
+        public string part1() {
             int sum = 0;
             foreach (var n in data) {
                 sum += n;
@@ -18,8 +15,7 @@ namespace aoc2022 {
             return sum.ToString();
         }
 
-        public string part2()
-        {
+        public string part2() {
             int prod = 1;
             foreach (var n in data) {
                 prod *= n;
