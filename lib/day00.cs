@@ -16,10 +16,12 @@ namespace aoc2022 {
         }
 
         public string part2() {
-            int prod = 1;
+            long prod = 1;
             foreach (var n in data) {
-                prod *= n;
+                prod = (prod * n) % 999983;
+                Console.Write(prod+" ");
             }
+            Console.WriteLine();
             return prod.ToString();
         }
     }
