@@ -68,7 +68,7 @@ namespace aoc2022 {
                         Bench("Day " + day + " part 2: ", sol.part2);
                     } else {
                         Console.WriteLine("Day " + day + " part 1: " + sol.part1());
-                        Console.WriteLine("Day " + day + " part 1: " + sol.part2());
+                        Console.WriteLine("Day " + day + " part 2: " + sol.part2());
                     }
                 } else {
                     Console.WriteLine("Class " + className + " not found");
