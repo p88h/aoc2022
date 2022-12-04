@@ -2,8 +2,8 @@ namespace aoc2022 {
     public class Vis03 : Solution {
         private List<string> data = new List<string>();
         private string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private ASCIIRay renderer = new ASCIIRay(1920, 540, 15);
-        private int tot = 0;
+        private ASCIIRay renderer = new ASCIIRay(1280, 720, 15, 22);
+        private int tot1 = 0, tot2 = 0;
         public void parse(List<string> input) {
             data = input;
         }
@@ -18,13 +18,13 @@ namespace aoc2022 {
             for (int i = line.Length / 2; i < line.Length; i++) right.Add(line[i]);
             foreach (char c in alphabet) renderer.Write(" " + c);
             renderer.WriteLine("");
-            renderer.Write("left:  ");
+            renderer.Write(" left: ");
             foreach (char c in alphabet) renderer.Write("|" + (left.Contains(c) ? 'x' : ' '));
             renderer.WriteLine("|");
             renderer.Write("right: ");
             foreach (char c in alphabet) renderer.Write("|" + (right.Contains(c) ? 'x' : ' '));
             renderer.WriteLine("|");
-            renderer.Write("same:  ");
+            renderer.Write(" same: ");
             char p = ' ';
             foreach (char c in alphabet) {
                 if (right.Contains(c) && left.Contains(c)) {
@@ -37,19 +37,16 @@ namespace aoc2022 {
             renderer.WriteLine("|");
             renderer.WriteLine("");
             int s = p > 'a' ? p - 'a' + 1 : p - 'A' + 27;
-            tot += s;
+            tot1 += s;
             renderer.WriteLine("priority: " + s);
-            renderer.WriteLine("TOTAL:    " + tot);
+            renderer.WriteLine(" TOTAL 1: " + tot1);
+            renderer.WriteLine("");
+            renderPart2(idx);
             return false;
         }
 
-        public string part1() {
-            tot = 0;
-            renderer.loop(10, x => renderPart1(x));
-            return tot.ToString();
-        }
-
-        public bool renderPart2(int i) {
+        public bool renderPart2(int idx) {
+            int i = idx / 3;
             i *= 3;
             if (i >= data.Count) return true;
             renderer.WriteLine(data[i]);
@@ -71,7 +68,7 @@ namespace aoc2022 {
             renderer.Write("elf 3: ");
             foreach (char c in alphabet) renderer.Write("|" + (z.Contains(c) ? 'x' : ' '));
             renderer.WriteLine("|");
-            renderer.Write("same:  ");
+            renderer.Write(" same: ");
             char p = ' ';
             foreach (char c in alphabet) {
                 if (x.Contains(c) && y.Contains(c) && z.Contains(c)) {
@@ -84,16 +81,19 @@ namespace aoc2022 {
             renderer.WriteLine("|");
             renderer.WriteLine("");
             int s = p > 'a' ? p - 'a' + 1 : p - 'A' + 27;
-            tot += s;
+            if (idx % 3 == 0) tot2 += s;
             renderer.WriteLine("priority: " + s);
-            renderer.WriteLine("TOTAL:    " + tot);
+            renderer.WriteLine(" TOTAL 2: " + tot2);
             return false;
         }
 
+        public string part1() {
+            renderer.loop(10, x => renderPart1(x));
+            return tot1.ToString();
+        }
+
         public string part2() {
-            tot = 0;
-            renderer.loop(10, x => renderPart2(x));
-            return tot.ToString();
+            return tot2.ToString();
         }
     }
 }
