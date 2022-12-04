@@ -25,7 +25,7 @@ namespace aoc2022 {
             }
             long its = (1000 * count) / time;
             long npi = (time * mul) / count;
-            Console.WriteLine(prefix + npi + unit + "/it, " + its + " it/s");
+            Console.WriteLine(prefix + npi + unit + ",\t " + its + " ips");
         }
 
         public static void Main(string[] args) {
