@@ -8,11 +8,12 @@ namespace aoc2022 {
         public string part1() {
             int sum = 0;            
             foreach (var n in data) {
-                char p = ' ';
-                HashSet<char> left = new HashSet<char>();
-                for (int j = 0; j < n.Length/2; j++) left.Add(n[j]);
-                for (int j = n.Length/2; j < n.Length; j++) if (left.Contains(n[j])) p = n[j];
-                if (p > 'a') sum += p - 'a' + 1; else sum += p - 'A' + 27;
+                ulong mask = 0;
+                for (int j = 0; j < n.Length/2; j++) mask |= 1UL << (n[j]-'@');
+                for (int j = n.Length/2; j < n.Length; j++) if ((mask & (1UL << (n[j]-'@'))) != 0) {
+                    if (n[j] > 'a') sum += n[j] - 'a' + 1; else sum += n[j] - 'A' + 27;
+                    break;
+                }
             }
             return sum.ToString();
         }
@@ -20,12 +21,14 @@ namespace aoc2022 {
         public string part2() {
             int sum = 0;            
             for (int i = 0; i < data.Count; i+=3) {
-                char p = ' ';
-                Dictionary<char, int> counts = new Dictionary<char, int>();
-                foreach (char c in data[i]) { counts[c]=counts.GetValueOrDefault(c)|1; }
-                foreach (char c in data[i+1]) { counts[c]=counts.GetValueOrDefault(c)|2; }
-                foreach (char c in data[i+2]) { counts[c]=counts.GetValueOrDefault(c)|4; if (counts[c]==7) p =c; }
-                if (p > 'a') sum += p - 'a' + 1; else sum += p - 'A' + 27;
+                ulong a = 0, b = 0;
+                foreach (char c in data[i]) a |= 1UL << (c-'@');
+                foreach (char c in data[i+1]) b |= 1UL << (c-'@');
+                ulong d = a & b;
+                foreach (char c in data[i+2]) if ((d & (1UL << (c-'@'))) != 0) {
+                    if (c > 'a') sum += c - 'a' + 1; else sum += c - 'A' + 27;
+                    break;
+                }
             }
             return sum.ToString();
         }

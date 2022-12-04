@@ -19,9 +19,7 @@ namespace aoc2022 {
             long prod = 1;
             foreach (var n in data) {
                 prod = (prod * n) % 999983;
-                Console.Write(prod+" ");
             }
-            Console.WriteLine();
             return prod.ToString();
         }
     }
