@@ -1,6 +1,6 @@
 namespace aoc2022 {
     public class Day04 : Solution {
-        private List<int[]> data = new List<int[]>();
+        public List<int[]> data = new List<int[]>();
         public void parse(List<string> input) {
             foreach (var s in input) {
                 var t = s.Split(',').ToArray();
