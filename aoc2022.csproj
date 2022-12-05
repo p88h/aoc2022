@@ -6,8 +6,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Configuration>Release</Configuration>
-    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
