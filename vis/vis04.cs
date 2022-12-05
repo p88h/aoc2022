@@ -33,7 +33,7 @@ namespace aoc2022 {
                 start = s;
                 end = e;
                 dir = d;
-            }            
+            }
 
             public bool render(int frame) {
                 // ended cleaning in the current sector and not in the last sector. move to the next sector's beginning.
@@ -57,7 +57,7 @@ namespace aoc2022 {
                     dx = dx + dir * 100;
                     cleaning = true;
                 }
-                
+
                 bool moving = true;
                 int speed = cleaning ? 3 : 5;
                 if (py != dy) {
@@ -65,7 +65,7 @@ namespace aoc2022 {
                 } else if (px != dx) {
                     if (px + speed < dx) px += speed; else if (px - speed > dx) px -= speed; else px = dx;
                 } else moving = false;
-                
+
                 if (px <= -20 || px >= 1300) return false;
 
                 int width = thick + 4;
@@ -127,7 +127,6 @@ namespace aoc2022 {
         private Day04 solver = new Day04();
         private List<Elf> elves = new List<Elf>();
         private List<Block> blocks = new List<Block>();
-        int ofs = 0, cur = 0;
         public void parse(List<string> input) {
             solver.parse(input);
             for (int i = 1; i <= 99; i++) blocks.Add(new Block(i));
@@ -140,7 +139,6 @@ namespace aoc2022 {
         public string part2() {
             const int screenWidth = 1280;
             const int screenHeight = 800;
-            int maxframe = 1000000;
             Random rnd = new Random();
             InitWindow(screenWidth, screenHeight, "AOC2022 DAY 4");
             SetTargetFPS(60);
@@ -157,10 +155,9 @@ namespace aoc2022 {
                 bool anymoving = false;
                 foreach (var elf in elves) {
                     anymoving = anymoving | elf.render(cnt);
-                    if (elf.cleaning) blocks[elf.cur-1].alpha += 0.001f;
+                    if (elf.cleaning) blocks[elf.cur - 1].alpha += 0.001f;
                 }
                 EndDrawing();
-                //----------------------------------------------------------------------------------
                 string countStr = String.Format("{0, 0:D5}", cnt);
                 if (anymoving) TakeScreenshot("tmp/frame" + countStr + ".png");
                 cnt++;
