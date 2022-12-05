@@ -36,7 +36,7 @@ namespace aoc2022 {
             }
         }
 
-        private State? initial;
+        public State? initial;
 
         public void parse(List<string> input) {
             int i;

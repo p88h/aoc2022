@@ -88,7 +88,7 @@ namespace aoc2022 {
         }
 
         public string part1() {
-            renderer.loop(10, x => renderPart1(x));
+            renderer.loop(x => renderPart1(x));
             return tot1.ToString();
         }
 

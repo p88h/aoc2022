@@ -9,4 +9,6 @@ Day 03 part 1: 3 µs,     307136 ips
 Day 03 part 2: 3 µs,     310457 ips
 Day 04 part 1: 1 µs,     712587 ips
 Day 04 part 2: 978 ns,   1022267 ips
+Day 05 part 1: 4 µs,     210305 ips
+Day 05 part 2: 2 µs,     340566 ips
 ```
