@@ -3,7 +3,7 @@ namespace aoc2022 {
         private string data = "";
         private int maxpos = 0;
         private int skip = 0;
-        private ASCIIRay renderer = new ASCIIRay(1280, 720, 15, 24);
+        private ASCIIRay renderer = new ASCIIRay(1280, 720, 5, 24);
         public void parse(List<string> input) {
             data = input[0];
             maxpos = data.Length;
