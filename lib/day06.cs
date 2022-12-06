@@ -18,16 +18,19 @@ namespace aoc2022 {
         public string part2() {
             int[] counts = new int[256];
             int unique = 0;
-            for (int i = 0; i < data.Length; i++) {
+            for (int i = 0; i < 14; i++) {
                 int x = ++counts[data[i]];
                 if (x == 1) unique++;
                 if (x == 2) unique--;
-                if (i >= 14) {
-                    x = --counts[data[i-14]];
-                    if (x == 1) unique++;
-                    if (x == 0) unique--;
-                }
-                if (unique == 14) return (i+1).ToString();
+            }
+            for (int i = 14; i < data.Length; i++) {
+                if (unique == 14) return i.ToString();
+                int x = ++counts[data[i]];
+                if (x == 1) unique++;
+                if (x == 2) unique--;
+                x = --counts[data[i-14]];
+                if (x == 1) unique++;
+                if (x == 0) unique--;
             }
             return "";
         }
