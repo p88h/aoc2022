@@ -10,6 +10,7 @@ namespace aoc2022 {
         long fidx = 0;
         Font font;
         int fsize;
+        Color color = RAYWHITE;
         const string font_name = "Inconsolata-SemiBold.ttf";
         const string font_file = "resources/" + font_name;
         const string font_uri = "https://github.com/googlefonts/Inconsolata/raw/main/fonts/ttf/" + font_name;
@@ -38,13 +39,13 @@ namespace aoc2022 {
                 done = renderFrame(cnt);
                 EndDrawing();
                 string idxStr = String.Format("{0, 0:D5}", fidx);
-                // TakeScreenshot("tmp/frame" + idxStr + ".png");
+                TakeScreenshot("tmp/frame" + idxStr + ".png");
                 cnt++; fidx++;
             }
         }
 
         public void Write(string msg) {
-            DrawTextEx(font, msg, new Vector2(cx, cy), fsize, 1, RAYWHITE);
+            DrawTextEx(font, msg, new Vector2(cx, cy), fsize, 1, color);
             cx += msg.Length * (fsize / 2);
         }
 
@@ -56,8 +57,12 @@ namespace aoc2022 {
         public void WriteXY(int x, int y, string msg) {
             cx = x * fsize / 2;
             cy = y * fsize;
-            DrawTextEx(font, msg, new Vector2(cx, cy), fsize, 1, RAYWHITE);
+            DrawTextEx(font, msg, new Vector2(cx, cy), fsize, 1, color);
             cx += msg.Length * (fsize / 2);
+        }
+
+        public void SetColor(int r, int g, int b, int a) {
+            color = new Color(r,g,b,a);
         }
     }
 }
