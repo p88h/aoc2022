@@ -2,16 +2,17 @@ namespace aoc2022 {
     public class Day07 : Solution {
 
         public class Node {
-            string name;
-            public long size;
+            public string name;
+            public int size;
+            public int index;
             public Node? parent;
             public Dictionary<string, Node> entries = new Dictionary<string, Node>();
-            public Node(Node? parent, string name, long size) {
+            public Node(Node? parent, string name, int size) {
                 this.name = name;
                 this.size = size;
                 this.parent = parent;
             }
-            public long Fix() {
+            public int Fix() {
                 foreach (var entry in entries.Values) size += entry.Fix();
                 return size;
             }
@@ -39,6 +40,7 @@ namespace aoc2022 {
                     if (parts[0] != "dir") size=int.Parse(parts[0]);
                     Node child = new Node(current, parts[1], size);
                     current.entries.Add(parts[1], child);
+                    child.index = allNodes.Count;
                     allNodes.Add(child);
                 }
             }
