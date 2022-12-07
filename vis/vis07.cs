@@ -36,7 +36,7 @@ namespace aoc2022 {
                     end[node.index] = start[node.index] = end[node.parent.index];                    
                     end[node.parent.index] += (node.size + 1599) / 1600;
                 }
-                colors[node.index] = new Color(rnd.Next(256),rnd.Next(256),rnd.Next(256),255);
+                colors[node.index] = new Color(128+rnd.Next(128),128+rnd.Next(128),128+rnd.Next(128),255);
             }
             long freeSpace = 70000000 - solver.allNodes[0].size;
             long minNeeded = 30000000 - freeSpace;
