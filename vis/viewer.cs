@@ -4,6 +4,11 @@ using static Raylib_cs.Color;
 using System.Diagnostics;
 
 namespace aoc2022 {
+
+    static class ViewerOptions {
+        public static bool recordVideo = false;
+    }
+
     public class Viewer {
         int width, height;
         FFWriter ff_writer;
@@ -21,7 +26,7 @@ namespace aoc2022 {
         public async void loop(Func<int, bool> renderFrame) {
             int cnt = 0;
             bool done = false;
-            var ff_task = Task.Run(ff_writer.run);
+            var ff_task = Task.Run(() => { if (ViewerOptions.recordVideo) return ff_writer.run(); else return true; } );
             stopwatch.Start();
             long lastts = 0;
             long lastcnt = 0;
@@ -30,10 +35,12 @@ namespace aoc2022 {
                 ClearBackground(BLACK);
                 done = renderFrame(cnt++);
                 EndDrawing();
-                Image screen = LoadImageFromScreen();
-                unsafe { 
-                    ff_writer.addRawImage(screen.data); 
-                    MemFree(screen.data); 
+                if (ViewerOptions.recordVideo) {
+                    Image screen = LoadImageFromScreen();
+                    unsafe { 
+                        ff_writer.addRawImage(screen.data); 
+                        MemFree(screen.data); 
+                    }
                 }
                 long ts = stopwatch.ElapsedMilliseconds;
                 if (ts > lastts + 4999) {
@@ -42,8 +49,8 @@ namespace aoc2022 {
                     lastts = ts;
                 }
             }
-            CloseWindow();
-            ff_writer.finish();
+            CloseWindow();            
+            if (ViewerOptions.recordVideo) ff_writer.finish();
             await ff_task;
         }
     }

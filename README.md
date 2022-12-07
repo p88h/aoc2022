@@ -40,22 +40,23 @@ Benchmarks from my system are also included in [BENCHMARKS.md](BENCHMARKS.md)
 Visualisations
 ==============
 
-The vis/ directory contains visualisations code - also in C#, and utilizing raylib and/or vanilla ASCII art in the console. 
+The vis/ directory contains visualisations code - also in C#, and utilizing raylib and/or some ASCII art (but also via raylib)
 
 To run them, pass an additional `vis` parameter, like so:
 
 ```
-$ dotnet run -c Release vis 00
+$ dotnet run -c Release vis 01
 ```
 
-Raylib visualisations dump the generated frames into the tmp/ directory, which requires some post-processing:
+Visualisations can also write video to `DayXX.mp4` files automatically, if you pass additional 'rec' parameter.
 
 ```
-$ ffmpeg -framerate 60 -pattern_type glob -i 'tmp/frame*.png' video.mp4
-$ rm tmp/frame*.png
+$ dotnet run -c Release vis 03 rec
 ```
 
-The simplest way to view them (the non-ASCII ones at least) is probably on
+This requires FFMPEG and a bit of luck (seems to work fine under Linux/WSL2, and not quite fine on OSX)
+
+The simplest way to view them is probably on
 [YouTube](https://www.youtube.com/playlist?list=PLgRrl8I0Q168jJYjfbzak3l-9xkLU6bCE)
 
 Copyright disclaimer

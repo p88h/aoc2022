@@ -38,6 +38,7 @@ namespace aoc2022 {
                     case "all": runAll = true; break;
                     case "bench": benchmark = true; break;
                     case "vis": classPrefix = "Vis"; break;
+                    case "rec": ViewerOptions.recordVideo = true; break;
                     default: inputDays.AddRange(args[i].Split(",")); break;
                 }
             }
