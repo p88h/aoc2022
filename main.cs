@@ -64,6 +64,11 @@ namespace aoc2022 {
                     List<String> input = File.ReadAllLines("input/day" + day + ".txt").ToList();
                     sol!.parse(input);
                     if (benchmark) {
+                        Bench("Day " + day + " parser: ", () => {
+                            Solution? s = (Solution?)Activator.CreateInstance(type);
+                            s!.parse(input);
+                            return "";
+                        });
                         Bench("Day " + day + " part 1: ", sol.part1);
                         Bench("Day " + day + " part 2: ", sol.part2);
                     } else {
