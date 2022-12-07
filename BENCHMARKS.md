@@ -17,9 +17,9 @@ Day 04 part 2: 995 ns,   1004621 ips
 Day 05 parser: 54 µs,    18480 ips
 Day 05 part 1: 4 µs,     207590 ips
 Day 05 part 2: 3 µs,     313601 ips
-Day 06 parser: 12 µs,    82386 ips
-Day 06 part 1: 1 µs,     827406 ips
-Day 06 part 2: 3 µs,     294873 ips
+Day 06 parser: 11 µs,    88205 ips
+Day 06 part 1: 1 µs,     848777 ips
+Day 06 part 2: 2 µs,     418449 ips
 Day 07 parser: 91 µs,    10937 ips
 Day 07 part 1: 516 ns,   1935204 ips
 Day 07 part 2: 418 ns,   2391940 ips
