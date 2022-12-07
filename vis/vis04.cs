@@ -124,9 +124,11 @@ namespace aoc2022 {
             }
         }
 
-        private Day04 solver = new Day04();
-        private List<Elf> elves = new List<Elf>();
-        private List<Block> blocks = new List<Block>();
+        Day04 solver = new Day04();
+        List<Elf> elves = new List<Elf>();
+        List<Block> blocks = new List<Block>();
+        Random rnd = new Random();
+
         public void parse(List<string> input) {
             solver.parse(input);
             for (int i = 1; i <= 99; i++) blocks.Add(new Block(i));
@@ -136,34 +138,25 @@ namespace aoc2022 {
             return solver.part1();
         }
 
-        public string part2() {
-            const int screenWidth = 1280;
-            const int screenHeight = 800;
-            Random rnd = new Random();
-            InitWindow(screenWidth, screenHeight, "AOC2022 DAY 4");
-            SetTargetFPS(60);
-            int cnt = 0;
-            while (!WindowShouldClose()) {
-                BeginDrawing();
-                ClearBackground(BLACK);
-                int p = cnt / 20;
-                if (cnt % 20 == 0 && p < solver.data.Count) {
-                    elves.Add(new Elf(rnd.Next(16), 40, 0, solver.data[p][0], solver.data[p][1], 1));
-                    elves.Add(new Elf(rnd.Next(16), 1240, 820, solver.data[p][3], solver.data[p][2], -1));
-                }
-                foreach (var blk in blocks) blk.render(cnt);
-                bool anymoving = false;
-                foreach (var elf in elves) {
-                    anymoving = anymoving | elf.render(cnt);
-                    if (elf.cleaning) blocks[elf.cur - 1].alpha += 0.001f;
-                }
-                EndDrawing();
-                string countStr = String.Format("{0, 0:D5}", cnt);
-                if (anymoving) TakeScreenshot("tmp/frame" + countStr + ".png");
-                cnt++;
+        public bool render(int idx) {
+            int p = idx / 20;
+            if (idx % 20 == 0 && p < solver.data.Count) {
+                elves.Add(new Elf(rnd.Next(16), 40, 0, solver.data[p][0], solver.data[p][1], 1));
+                elves.Add(new Elf(rnd.Next(16), 1240, 820, solver.data[p][3], solver.data[p][2], -1));
             }
-            CloseWindow();        // Close window and OpenGL context            
-            return "";
+            foreach (var blk in blocks) blk.render(idx);
+            bool anymoving = false;
+            foreach (var elf in elves) {
+                anymoving = anymoving | elf.render(idx);
+                if (elf.cleaning) blocks[elf.cur - 1].alpha += 0.001f;
+            }
+            return !anymoving;
+        }
+
+        public string part2() {
+            Viewer view = new Viewer(1280, 800, 120, "Day04");
+            view.loop(render);
+            return solver.part2();
         }
     }
 }

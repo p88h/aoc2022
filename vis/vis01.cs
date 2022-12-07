@@ -120,71 +120,63 @@ namespace aoc2022 {
             return solver.part1();
         }
 
-        public string part2() {
-            const int screenWidth = 960;
-            const int screenHeight = 540;
-            int maxframe = 1000000;
-            InitWindow(screenWidth, screenHeight, "AOC2022 DAY 1");
-            SetTargetFPS(120);
-            int cnt = 0;
-            while (!WindowShouldClose())    // Detect window close button or ESC key
-            {
-                BeginDrawing();
-                ClearBackground(BLACK);
-                for (int i = 0; i < 10; i++) {
-                    int px = 132 + i * 84;
-                    DrawCircle(px, 110, 10, DARKGRAY);
-                    switch ((i + (cnt / 5)) % 4) {
-                        case 0: DrawLine(px, 102, px, 118, LIGHTGRAY); break;
-                        case 1: DrawLine(px - 6, 104, px + 6, 116, LIGHTGRAY); break;
-                        case 2: DrawLine(px - 8, 110, px + 8, 110, LIGHTGRAY); break;
-                        case 3: DrawLine(px - 6, 116, px + 6, 104, LIGHTGRAY); break;
-                    }
+        int maxframe = 1000000;
+
+        public bool render(int cnt) {
+            for (int i = 0; i < 10; i++) {
+                int px = 132 + i * 84;
+                DrawCircle(px, 110, 10, DARKGRAY);
+                switch ((i + (cnt / 5)) % 4) {
+                    case 0: DrawLine(px, 102, px, 118, LIGHTGRAY); break;
+                    case 1: DrawLine(px - 6, 104, px + 6, 116, LIGHTGRAY); break;
+                    case 2: DrawLine(px - 8, 110, px + 8, 110, LIGHTGRAY); break;
+                    case 3: DrawLine(px - 6, 116, px + 6, 104, LIGHTGRAY); break;
                 }
-                DrawLine(132, 100, 1000, 100, DARKGRAY);
-                DrawLine(132, 120, 1000, 120, DARKGRAY);
-                Elf current = elves[cur];
-                for (int i = ofs; i < sugars.Count(); i++) {
-                    if (sugars[i].done) {
-                        current.weight += sugars[i].weight;
-                        ofs++;
-                        if (sugars[i].weight == 0) {
-                            for (int j = 0; j < cur; j++) {
-                                if (elves[j].weight < current.weight) {
-                                    elves[j].dx += 80;
-                                } else {
-                                    current.dx += 80;
-                                }
-                            }
-                            current.dx += 20;
-                            current.dy += 128;
-                            cur++;
-                            for (int j = cur; j < elves.Count(); j++) {
-                                elves[j].dx += 20;
-                            }
-                            elves.Add(new Elf(0, 200));
-                        }
-                        if (ofs == sugars.Count()) {
-                            for (int j = cur + 1; j < elves.Count(); j++) {
-                                elves[j].dx = 0;
-                            }
-                            maxframe = cnt + 100;
-                        }
-                    } else {
-                        sugars[i].render();
-                    }
-                }
-                foreach (var elf in elves) {
-                    elf.render(cnt);
-                }
-                EndDrawing();
-                //----------------------------------------------------------------------------------
-                string countStr = String.Format("{0, 0:D5}", cnt);
-                if (cnt < maxframe) TakeScreenshot("tmp/frame" + countStr + ".png");
-                cnt++;
             }
-            CloseWindow();        // Close window and OpenGL context            
-            return "";
+            DrawLine(132, 100, 1000, 100, DARKGRAY);
+            DrawLine(132, 120, 1000, 120, DARKGRAY);
+            Elf current = elves[cur];
+            for (int i = ofs; i < sugars.Count(); i++) {
+                if (sugars[i].done) {
+                    current.weight += sugars[i].weight;
+                    ofs++;
+                    if (sugars[i].weight == 0) {
+                        for (int j = 0; j < cur; j++) {
+                            if (elves[j].weight < current.weight) {
+                                elves[j].dx += 80;
+                            } else {
+                                current.dx += 80;
+                            }
+                        }
+                        current.dx += 20;
+                        current.dy += 128;
+                        cur++;
+                        for (int j = cur; j < elves.Count(); j++) {
+                            elves[j].dx += 20;
+                        }
+                        elves.Add(new Elf(0, 200));
+                    }
+                    if (ofs == sugars.Count()) {
+                        for (int j = cur + 1; j < elves.Count(); j++) {
+                            elves[j].dx = 0;
+                        }
+                        maxframe = cnt + 120;
+                    }
+                } else {
+                    sugars[i].render();
+                }
+            }
+            foreach (var elf in elves) {
+                elf.render(cnt);
+            }
+            return cnt > maxframe;
         }
+
+        public string part2() {
+            Viewer view = new Viewer(960, 540, 120, "Day01");
+            view.loop(render);
+            return solver.part2();
+        }
+
     }
 }

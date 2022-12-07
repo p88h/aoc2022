@@ -9,38 +9,18 @@ namespace aoc2022 {
         }
 
         public string part1() {
-            Console.Clear();
-            for (int y = 0; y < Console.WindowHeight / 2; y++) {
-                Console.WriteLine();
-            }
-            for (int x = 0; x < Console.WindowWidth / 2 - 1; x++) {
-                Console.Write(" ");
-            }
-            Console.WriteLine(solver.part1());
-            Console.ReadLine();
-            return "";
+            return solver.part1();
         }
 
         public string part2() {
-            const int screenWidth = 800;
-            const int screenHeight = 600;
-
-            InitWindow(screenWidth, screenHeight, "AOC2022");
-
-            SetTargetFPS(30);
-            int cnt = 0;
-            while (!WindowShouldClose())    // Detect window close button or ESC key
-            {
-                BeginDrawing();
-                ClearBackground(RAYWHITE);
-                DrawText(solver.part2(), 190, 200, 20, MAROON);
-                EndDrawing();
-                string countStr = String.Format("{0, 0:D5}", cnt);
-                TakeScreenshot("tmp/frame" + countStr + ".png");
-                cnt++;
-            }
-            CloseWindow();        // Close window and OpenGL context            
-            return "";
+            ASCIIRay renderer = new ASCIIRay(800, 600, 30);
+            renderer.loop(cnt => { 
+                renderer.WriteXY(25,12, "Advent of Code"); 
+                renderer.WriteXY(25,14, solver.part1()); 
+                renderer.WriteXY(34,14, solver.part2()); 
+                return cnt >= 300; 
+            });
+            return solver.part2();
         }
     }
 }
