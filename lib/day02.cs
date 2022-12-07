@@ -1,6 +1,6 @@
 namespace aoc2022 {
     public class Day02 : Solution {
-        private List<string> data = new List<string>();
+        public List<string> data = new List<string>();
         public void parse(List<string> input) {
             data = input;
         }
