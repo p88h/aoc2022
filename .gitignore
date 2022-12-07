@@ -4,7 +4,6 @@
 /.vscode
 /tmp
 /py
-/resources
 *.png
 *.mp4
 *.ttf

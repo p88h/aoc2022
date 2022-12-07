@@ -2,7 +2,7 @@ namespace aoc2022 {
     public class Vis03 : Solution {
         private List<string> data = new List<string>();
         private string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private ASCIIRay renderer = new ASCIIRay(1280, 720, 15, 22);
+        private ASCIIRay renderer = new ASCIIRay(1280, 720, 15, 22, "Day03");
         private int tot1 = 0, tot2 = 0;
         public void parse(List<string> input) {
             data = input;

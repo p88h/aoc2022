@@ -3,7 +3,7 @@ namespace aoc2022 {
         private Day05 solver = new Day05();
         private Day05.State? s1, s2;
         private List<int[]> single_moves = new List<int[]>();
-        private ASCIIRay renderer = new ASCIIRay(1280, 800, 30, 22);
+        private ASCIIRay renderer = new ASCIIRay(1280, 800, 60, 22, "Day05");
         public void parse(List<string> input) {
             solver.parse(input);
             foreach (var move in solver.moves) for (int i = 0; i < move[0]; i++) single_moves.Add(new int[] { move[1], move[2] });
