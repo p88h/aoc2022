@@ -1,8 +1,8 @@
 namespace aoc2022 {
     public class Day06 : Solution {
-        private string data = "";
+        private char[] data = {};
         public void parse(List<string> input) {
-            data = input[0];
+            data = input[0].ToArray();
         }
 
         public string part1() {
