@@ -1,24 +1,33 @@
 ```
 CPU: Intel Core i7-13700K (-MT MCP-) 
-OS: Windows 11 / WSL Linux .NET Core 6.0.403
+OS: Windows 11 21H2 > WSL2 Ubuntu 22.04 > .NET Core 6.0.111
 
-Day 01 part 1: 4 µs,     206972 ips
-Day 01 part 2: 565 ns,   1768177 ips
-Day 02 part 1: 2 µs,     384418 ips
-Day 02 part 2: 2 µs,     392607 ips
-Day 03 part 1: 3 µs,     307136 ips
-Day 03 part 2: 3 µs,     310457 ips
-Day 04 part 1: 1 µs,     712587 ips
-Day 04 part 2: 978 ns,   1022267 ips
-Day 05 part 1: 4 µs,     210305 ips
-Day 05 part 2: 2 µs,     340566 ips
-Day 06 part 1: 1 µs,     854975 ips
-Day 06 part 2: 3 µs,     309954 ips
+Day 01 parser: 24 µs,    40762 ips
+Day 01 part 1: 5 µs,     195022 ips
+Day 01 part 2: 576 ns,   1735108 ips
+Day 02 parser: 29 ns,    34442674 ips
+Day 02 part 1: 2 µs,     372193 ips
+Day 02 part 2: 2 µs,     380548 ips
+Day 03 parser: 29 ns,    34186788 ips
+Day 03 part 1: 3 µs,     305992 ips
+Day 03 part 2: 3 µs,     300340 ips
+Day 04 parser: 203 µs,   4914 ips
+Day 04 part 1: 1 µs,     729577 ips
+Day 04 part 2: 995 ns,   1004621 ips
+Day 05 parser: 54 µs,    18480 ips
+Day 05 part 1: 4 µs,     207590 ips
+Day 05 part 2: 3 µs,     313601 ips
+Day 06 parser: 12 µs,    82386 ips
+Day 06 part 1: 1 µs,     827406 ips
+Day 06 part 2: 3 µs,     294873 ips
+Day 07 parser: 91 µs,    10937 ips
+Day 07 part 1: 516 ns,   1935204 ips
+Day 07 part 2: 418 ns,   2391940 ips
 ```
 
 ```
 CPU: 10-core Apple M1 Pro (-MCP-) 
-OS: MacOS 12.6.1 .NET Core 6.0.403
+OS: MacOS 12.6.1 > .NET Core 6.0.403
 
 Day 01 parser: 29 µs,    34185 ips
 Day 01 part 1: 6 µs,     144730 ips
