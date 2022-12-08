@@ -34,7 +34,9 @@ namespace aoc2022 {
             }
 
             renderer.loop(cnt => {
-                camera.position = new Vector3((float)Math.Cos(cnt / 300.0f) * 90.0f + 50, 24.0f, (float)Math.Sin(cnt / 300.0f) * 90.0f + 50.0f);
+                camera.position = new Vector3((float)Math.Cos(cnt / 300.0f) * 90.0f + 50, 
+                                              (float)Math.Cos(cnt / 150.0f) * 10.0f + 10.0f,
+                                              (float)Math.Sin(cnt / 300.0f) * 90.0f + 50.0f);
                 BeginMode3D(camera);
                 float maxh = (cnt / 30.0f) + 1;
                 for (int i = 0; i < dim; i++) {
@@ -82,12 +84,9 @@ namespace aoc2022 {
                             colors[dim - j - 1][i] = new Color(50 + data[dim - j - 1][i] * 20, 50 + data[dim - j - 1][i] * 20, 80, 255);
                         }
                     }
-
                 }
-
                 EndMode3D();
-
-                return cnt > 600;
+                return cnt > 900;
             });
             return solver.part2();
         }
