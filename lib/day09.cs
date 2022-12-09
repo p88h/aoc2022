@@ -37,14 +37,8 @@ namespace aoc2022 {
             void chase(int px, int py) {
                 int dx = px - cx, dy = py - cy, ax = Math.Abs(dx), ay = Math.Abs(dy);
                 if (ax > 1 || ay > 1) {
-                    int sx = dx < 0 ? -1 : 1, sy = dy < 0 ? -1 : 1;
-                    if (ax > 0 && ay > 0) { 
-                        cx += sx; cy += sy; 
-                    } else if (ax > 1) {
-                        cx += sx; 
-                    } else {
-                        cy += sy;
-                    }
+                    if (ax > 0) cx += dx < 0 ? -1 : 1; 
+                    if (ay > 0) cy += dy < 0 ? -1 : 1; 
                     if (trace != null) trace(cx, cy);
                     if (next != null) next.chase(cx, cy);
                 }
