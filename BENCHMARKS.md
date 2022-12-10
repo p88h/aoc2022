@@ -29,6 +29,9 @@ Day 08 part 2: 237 µs,   4202 ips
 Day 09 parser: 83 µs,    12034 ips
 Day 09 part 1: 135 µs,   7401 ips
 Day 09 part 2: 214 µs,   4658 ips
+Day 10 parser: 14 µs,    69042 ips
+Day 10 part 1: 391 ns,   2556839 ips
+Day 10 part 2: 829 ns,   1205774 ips
 ```
 
 ```

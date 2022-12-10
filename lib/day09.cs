@@ -2,7 +2,7 @@ namespace aoc2022 {
     public class Day09 : Solution {
         public int[] data = { };
         public void parse(List<string> input) {
-            List<int> values = input.Select(s => int.Parse(s.Substring(2))).ToList();
+            List<int> values = input.Select(s => int.Parse(s[2..])).ToList();
             data = new int[values.Sum() * 2];
             int k = 0;
             for (int i = 0; i < input.Count; i++) {
