@@ -52,9 +52,9 @@ namespace aoc2022 {
                 if (cycle % 40 == 0) sb.Append('\n');
                 int posx = (cycle++ % 40);
                 if (posx == x || posx == x - 1 || posx == (x + 1) % 40) {
-                    sb.Append('#');
+                    sb.Append('█');
                 } else {
-                    sb.Append('.');
+                    sb.Append(' ');
                 }
             }
         }
