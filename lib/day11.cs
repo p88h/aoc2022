@@ -34,14 +34,14 @@ namespace aoc2022 {
             }
         }
 
-        public string run(int rounds, Func<long, long> worry) {
-            int[] count = new int[monkeys.Count];
-            foreach (var (i, v) in items) {
-                int c = i; long x = v;
+        public string run(int rounds, Func<long, int, int, long> worry) {
+            long[] count = new long[monkeys.Count];
+            for (int i = 0; i < items.Count; i++) {
+                (int c, long x) = items[i];
                 for (int r = 0; r < rounds;) {
                     var m = monkeys[c];
                     count[c]++;
-                    x = worry(m.a * x * x + m.b * x + m.c);
+                    x = worry(m.a * x * x + m.b * x + m.c, c, i);
                     int d = (x % m.divisor == 0) ? m.left : m.right;
                     if (d < c) r++;
                     c = d;
@@ -51,8 +51,8 @@ namespace aoc2022 {
             return (top[0] * top[1]).ToString();
         }
 
-        public string part1() { return run(20, (x) => x / 3); }
+        public string part1() { return run(20, (x,y,z) => x / 3); }
 
-        public string part2() { return run(10000, (x) => x % modulus); }
+        public string part2() { return run(10000, (x,y,z) => x % modulus); }
     }
 }
