@@ -39,7 +39,6 @@ namespace aoc2022 {
         }
 
         List<Packet> packets = new List<Packet>();
-        Packet two = new Packet(new Packet(new Packet(2))), six = new Packet(new Packet(new Packet(6)));
 
         public void parse(List<string> input) {
             List<Packet> stack = new List<Packet>();
@@ -69,21 +68,21 @@ namespace aoc2022 {
                 }
                 if (root != null) packets.Add(root);
             }
-            packets.Add(six);
-            packets.Add(two);
         }
 
         public string part1() {
             int tot = 0;
-            for (int i = 0; i < packets.Count; i += 2) {
-                if (packets[i].CompareTo(packets[i + 1]) < 0) tot += i / 2 + 1;
-            }
+            for (int i = 0; i < packets.Count; i += 2) if (packets[i].CompareTo(packets[i + 1]) < 0) tot += i / 2 + 1;
             return tot.ToString();
         }
         public string part2() {
             int ret = 1;
-            packets.Sort();
-            for (int i = 0; i < packets.Count; i++) if (packets[i] == two || packets[i] == six) ret *= i + 1;
+            List<Packet> copy = new List<Packet>(packets);
+            Packet two = new Packet(new Packet(new Packet(2))), six = new Packet(new Packet(new Packet(6)));
+            copy.Add(two);
+            copy.Add(six);
+            copy.Sort();
+            for (int i = 0; i < copy.Count; i++) if (copy[i] == two || copy[i] == six) ret *= i + 1;
             return ret.ToString();
         }
     }

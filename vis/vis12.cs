@@ -50,13 +50,13 @@ namespace aoc2022 {
                 } else {
                     camera.position = new Vector3(px - 2 + rot, 62.0f - rot, py + solver.h - rot);
                     if (rot < 30.0f) {
-                        rot += 1.0f / (float) factor;
+                        rot += 1.0f / (float)factor;
                     } else if (rot < 33.0f) {
-                        rot += 0.5f / (float) factor;
+                        rot += 0.5f / (float)factor;
                     }
                 }
                 BeginMode3D(camera);
-                DrawSphereEx(new Vector3(px, pz + 0.5f, py), 0.5f, 6, 6, BLUE);                
+                DrawSphereEx(new Vector3(px, pz + 0.5f, py), 0.5f, 6, 6, BLUE);
                 for (int x = 0; x < solver.w; x++) {
                     for (int y = 0; y < solver.h; y++) {
                         int elev = solver.map[x, y] - 'a'; // 0-25
@@ -65,9 +65,9 @@ namespace aoc2022 {
                     }
                 }
                 EndMode3D();
-                renderer.WriteXY(1,0,"Distance: " + idx);
-                renderer.WriteXY(1,1,"Position: " + px1 + "," + py1);
-                renderer.WriteXY(1,2,"Elevation: " + pz1);
+                renderer.WriteXY(1, 0, "Distance: " + idx);
+                renderer.WriteXY(1, 1, "Position: " + px1 + "," + py1);
+                renderer.WriteXY(1, 2, "Elevation: " + pz1);
                 return cnt > maxcnt;
             });
             return solver.part1();
