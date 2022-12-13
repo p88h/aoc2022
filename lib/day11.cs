@@ -51,8 +51,8 @@ namespace aoc2022 {
             return (top[0] * top[1]).ToString();
         }
 
-        public string part1() { return run(20, (x,y,z) => x / 3); }
+        public string part1() { return run(20, (x, y, z) => x / 3); }
 
-        public string part2() { return run(10000, (x,y,z) => x % modulus); }
+        public string part2() { return run(10000, (x, y, z) => x % modulus); }
     }
 }
