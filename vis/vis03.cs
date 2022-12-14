@@ -11,8 +11,8 @@ namespace aoc2022 {
         public bool renderPart1(int idx) {
             if (idx >= data.Count) return true;
             string line = data[idx];
-            renderer.WriteLine(line);
-            renderer.Write("       ");
+            renderer.WriteXY(0,0, line);
+            renderer.WriteXY(0,1,"       ");
             HashSet<char> left = new HashSet<char>(), right = new HashSet<char>();
             for (int i = 0; i < line.Length / 2; i++) left.Add(line[i]);
             for (int i = line.Length / 2; i < line.Length; i++) right.Add(line[i]);

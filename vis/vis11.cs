@@ -22,8 +22,8 @@ namespace aoc2022 {
             Console.WriteLine(maxcnt);
             ASCIIRay renderer = new ASCIIRay(1920, 1080, 60, 24, "Day11");
             Camera3D camera = new Camera3D();
-            Model model = LoadModel("resources/Cartoon Monkey.obj");
-            Texture2D texture = LoadTexture("resources/UV Monkey.png");            
+            Model model = LoadModel("resources/CartoonMonkeyModel.obj");
+            Texture2D texture = LoadTexture("resources/Monkey_Diffuse.png");            
             SetMaterialTexture(ref model, 0, MATERIAL_MAP_DIFFUSE, ref texture);
 
             camera.target = new Vector3(14.5f, 4.0f, 0.0f);
