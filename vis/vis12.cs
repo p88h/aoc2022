@@ -3,7 +3,6 @@ using Raylib_cs;
 using static Raylib_cs.Raylib;
 using static Raylib_cs.Color;
 using static Raylib_cs.CameraProjection;
-using static Raylib_cs.MaterialMapIndex;
 
 
 namespace aoc2022 {

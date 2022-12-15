@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace aoc2022 {
     public class Day15 : Solution {
-        private List<int[]> data = new List<int[]>();
+        public List<int[]> data = new List<int[]>();
         public void parse(List<string> input) {
             Regex rx = new Regex(@"Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)", RegexOptions.Compiled);
             foreach (var s in input) {                
