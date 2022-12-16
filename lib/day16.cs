@@ -126,7 +126,7 @@ namespace aoc2022 {
             bool expensive = false;
             int[] best = new int[expensive ? 1 << 27 : 1 << 15];
             List<List<State>> stacks = new List<List<State>>();
-            stacks.Add(new List<State> { new State { pa = start, pb s = start } });
+            stacks.Add(new List<State> { new State { pa = start, pb = start } });
             for (int i = 1; i < 26; i++) stacks.Add(new List<State>());
             for (int time = 0; time < 26; time++) {
                 foreach (State s in stacks[time]) {
