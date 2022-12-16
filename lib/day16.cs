@@ -2,9 +2,31 @@ using System.Text.RegularExpressions;
 
 namespace aoc2022 {
     public class Day16 : Solution {
-        public List<int[]> graph = new List<int[]>();
+        public List<int[]> graph = new List<int[]>(), cgraph = new List<int[]>();
         public List<int> flows = new List<int>();
-        public int start;
+        public int start, valves = 0;
+
+        public void compress_distances() {
+            for (int origin = 0; origin < graph.Count; origin++) {
+                int[] dist = new int[graph.Count];
+                cgraph.Add(dist);
+                List<int> stack = new List<int> { origin };
+                if (flows[origin] == 0 && origin != start) continue;
+                if (flows[origin] > 0) valves++;
+                while (stack.Count > 0) {
+                    List<int> nstack = new List<int> { };
+                    foreach (var src in stack) {
+                        foreach (var dst in graph[src]) {
+                            if (dst != origin && dist[dst] == 0) {
+                                dist[dst] = dist[src] + 1;
+                                nstack.Add(dst);
+                            }
+                        }
+                    }
+                    stack = nstack;
+                }
+            }
+        }
 
         public void parse(List<string> input) {
             Regex rx = new Regex(@"^Valve (\w+) has flow rate=(\d+); tunnels? leads? to valves? (.*)$", RegexOptions.Compiled);
@@ -21,6 +43,7 @@ namespace aoc2022 {
             }
             foreach (var (l, _, d) in parsed) graph.Add(d.Select(s => labelIndex[s]).ToArray());
             start = labelIndex["AA"];
+            compress_distances();
         }
 
         public string part1() {
@@ -65,62 +88,62 @@ namespace aoc2022 {
             return max.ToString();
         }
 
-        public string part2() {
-            List<(int, int, int, int, int)> states = new List<(int, int, int, int, int)> { (start, start, 0, 0, 0) };
-            // elephant-sized.
-            int[] best = new int[134217728];
-            int max = 0;
-            for (int round = 1; round <= 25; round++) {
-                List<(int, int, int, int, int)> nstates = new List<(int, int, int, int, int)>();
-                Console.WriteLine("Round: " + round + " States: " + states.Count + " Max " + max);
-                int pc = 0, pbits = 0, pprev = -1;
-                states = states.OrderByDescending(f => (f.Item1 << 21) + (f.Item2 << 15) + f.Item3).ToList();
-                foreach (var (n, m, bits, flow, acc) in states) {
-                    int code = (n << 21) + (m << 15);
-                    int projected = acc + flow * (26 - round + 1);
-                    if (best[code+bits] > projected + 1) continue;
-                    if (pc == code && (pbits & bits) == bits && projected < pprev) continue;
-                    pc = code;
-                    pbits = bits;
-                    pprev = projected;
-                    List<(int, int, int)> tmp = new List<(int, int, int)>();
-                    // elephant opens the valve, because now it can.
-                    if (flows[m] > 0 && (bits & (1 << m)) == 0) {
-                        int nbits = bits | (1 << m);
-                        tmp.Add((m, nbits, flow + flows[m]));
-                    }
-                    // elephant moves everywhere it can, because it's an elephant.
-                    foreach (int dst in graph[m]) tmp.Add((dst, bits, flow));
-                
-                    foreach (var (em, ebits, eflow) in tmp) {
-                        // open valve
-                        if (flows[n] > 0 && (ebits & (1 << n)) == 0) {
-                            int nbits = ebits | (1 << n);
-                            int nflow = eflow + flows[n];
-                            code = n <= em ? (n << 21) + (em << 15) : (em << 21) + (n << 15);
-                            code += nbits;
-                            // elephant's flow isn't flowing yet
-                            projected = acc + flow + nflow * (26 - round);
-                            if (projected + 1 > best[code]) {
-                                nstates.Add((n, em, nbits, nflow, acc + flow));
-                                best[code] = projected + 1;
-                                if (projected > max) max = projected;
-                            }
-                        }
-                        // go somewhere
-                        foreach (int dst in graph[n]) {
-                            code = dst <= em ? (dst << 21) + (em << 15) : (em << 21) + (dst << 15);
-                            code += ebits;
-                            projected = acc + flow + eflow * (26 - round);
-                            if (projected + 1 > best[code]) {
-                                nstates.Add((dst, em, ebits, eflow, acc + flow));
-                                best[code] = projected + 1;
-                                if (projected > max) max = projected;
-                            }
-                        }
-                    }
+        public struct State {
+            public int ta, tb, pa, pb, fa, fb, acc, bits;
+        }
+
+        public List<State> generate(State s) {
+            List<State> results = new List<State>();
+            for (int i = 0; i < valves; i++) {
+                if ((s.bits & (1 << i)) == 0) {
+                    // move and swap: copy b to a, rest assigned below
+                    State d = new State { ta = s.tb, pa = s.pb, fa = s.fb };
+                    int cost = cgraph[s.pa][i] + 1;  // time to go from pa to i 
+                    d.bits = s.bits | (1 << i);  // .. and open the valve i
+                    d.acc = s.acc + s.fa * cost; // time flows for a, so add it to the accumulator
+                    d.pb = i;                    // a becomes b and is now at i
+                    d.fb = s.fa + flows[i];      // flow of a (now b) is increased
+                    d.tb = s.ta + cost;          // the new timepoint for a (now b)
+                    // swap if unordered
+                    if (d.tb < d.ta) d = new State { 
+                        ta = d.tb, pa = d.pb, fa = d.fb, 
+                        tb = d.ta, pb = d.pa, fb = d.fa, 
+                        acc = d.acc, bits = d.bits };
+                    results.Add(d);
                 }
-                states = nstates;
+            }
+            if (s.ta == s.tb) {
+                List<State> nresults = new List<State>();
+                foreach (State t in results) nresults.AddRange(generate(t));
+                results = nresults;
+            }
+            return results;
+        }
+
+        public string part2() {
+            int max = 0;
+            int[] best = new int[1 << 15];
+            List<List<State>> stacks = new List<List<State>>();
+            stacks.Add(new List<State> { new State { pa = start, pb = start } });
+            for (int i = 1; i < 26; i++) stacks.Add(new List<State>());
+            for (int time = 0; time < 26; time++) {
+                foreach (State s in stacks[time]) {
+                    // drop out of time 
+                    int projection = s.acc + s.fa * (26 - s.ta);
+                    if (s.tb <= 26) projection += s.fb * (26 - s.tb);
+                    if (projection > max) max = projection;
+                    // this may be a bit wonky, since it doesn't really consider where we are or anything, 
+                    // Just what's the best projection for a combination of valves up to this point in time. 
+                    // But hey, it produces good results on some inputs fast.
+                    // If we use longer codes : (s.pa << 21) + (s.pb << 15) + s.bits (and larger best cache)
+                    // like part1 does, then this runs in about 1.5 seconds as opposed to 40 ms. That is fully 
+                    // correct then, since the time factor is accounted into projection - same code with higher
+                    // time will always produce a lower projection.
+                    int code = s.bits;
+                    if (best[code] > projection + 1) continue;
+                    best[code] = projection + 1;
+                    foreach (State t in generate(s)) if (t.tb < 26) stacks[t.ta].Add(t);
+                }
             }
             return max.ToString();
         }
