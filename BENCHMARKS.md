@@ -100,5 +100,5 @@ Day 15 part 1: 358 ns,   2791777 ips
 Day 15 part 2: 875 ms,   1 ips
 Day 16 parser: 2 ms,     335 ips
 Day 16 part 1: 6 ms,     149 ips
-Day 16 part 2: 24341 ms,         0 ips
+Day 16 part 2: 15304 ms,         0 ips
 ```
