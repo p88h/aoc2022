@@ -105,10 +105,11 @@ namespace aoc2022 {
                     d.fb = s.fa + flows[i];      // flow of a (now b) is increased
                     d.tb = s.ta + cost;          // the new timepoint for a (now b)
                     // swap if unordered
-                    if (d.tb < d.ta) d = new State { 
-                        ta = d.tb, pa = d.pb, fa = d.fb, 
-                        tb = d.ta, pb = d.pa, fb = d.fa, 
-                        acc = d.acc, bits = d.bits };
+                    if (d.tb < d.ta) d = new State {
+                        ta = d.tb, pa = d.pb, fa = d.fb,
+                        tb = d.ta, pb = d.pa, fb = d.fa,
+                        acc = d.acc, bits = d.bits
+                    };
                     results.Add(d);
                 }
             }
@@ -122,9 +123,10 @@ namespace aoc2022 {
 
         public string part2() {
             int max = 0;
-            int[] best = new int[1 << 15];
+            bool expensive = false;
+            int[] best = new int[expensive ? 1 << 27 : 1 << 15];
             List<List<State>> stacks = new List<List<State>>();
-            stacks.Add(new List<State> { new State { pa = start, pb = start } });
+            stacks.Add(new List<State> { new State { pa = start, pb s = start } });
             for (int i = 1; i < 26; i++) stacks.Add(new List<State>());
             for (int time = 0; time < 26; time++) {
                 foreach (State s in stacks[time]) {
@@ -135,11 +137,12 @@ namespace aoc2022 {
                     // this may be a bit wonky, since it doesn't really consider where we are or anything, 
                     // Just what's the best projection for a combination of valves up to this point in time. 
                     // But hey, it produces good results on some inputs fast.
-                    // If we use longer codes : (s.pa << 21) + (s.pb << 15) + s.bits (and larger best cache)
-                    // like part1 does, then this runs in about 1.5 seconds as opposed to 40 ms. That is fully 
-                    // correct then, since the time factor is accounted into projection - same code with higher
-                    // time will always produce a lower projection.
+                    // If we use longer codes and larger best cache then this runs in about 700 ms as opposed to 40 ms. 
+                    // (this can be enabled by setting expensive flag to true above)
+                    // That is fully correct then, since the time factor is accounted into projection - 
+                    // same code with higher time will always produce a lower projection.
                     int code = s.bits;
+                    if (expensive) code += (s.pa < s.pb) ? (s.pa << 21) + (s.pb << 15) : (s.pb << 21) + (s.pa << 15);
                     if (best[code] > projection + 1) continue;
                     best[code] = projection + 1;
                     foreach (State t in generate(s)) if (t.tb < 26) stacks[t.ta].Add(t);
