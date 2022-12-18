@@ -61,7 +61,7 @@ namespace aoc2022 {
                     long dt = round - last_seen[code];
                     long dh = h - last_height[code];
                     if (last_diff == 0) last_diff = dt;
-                    if (last_diff == dt) cycle_len++;
+                    if (last_diff == dt) cycle_len++; else cycle_len=0;
                     if (cycle_len > 10 && (round % last_diff) == ((rounds - 1) % last_diff)) {
                         long nrounds = (rounds - round) / last_diff;
                         cycle_height = nrounds * dh;
