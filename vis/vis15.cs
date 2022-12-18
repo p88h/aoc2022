@@ -24,12 +24,12 @@ namespace aoc2022 {
                 if (cs < scale * 4) cs += 10;
                 if (cd >= bd) {
                     DrawCircle(bx / scale, by / scale, 5, new Color(255, 255, 160, alpha));
-                    DrawPoly(new Vector2(sx / scale, sy / scale), 4, (bd / scale) , 0, new Color(255, 200, 255, alpha/2));
-                    DrawPolyLines(new Vector2(sx / scale, sy / scale), 4, (bd / scale) , 0, new Color(255, 160, 255, alpha));
+                    DrawPoly(new Vector2(sx / scale, sy / scale), 4, (bd / scale), 0, new Color(255, 200, 255, alpha / 2));
+                    DrawPolyLines(new Vector2(sx / scale, sy / scale), 4, (bd / scale), 0, new Color(255, 160, 255, alpha));
                     if (alpha > 64) alpha -= 4;
                     if (ring < 20) {
                         ring++;
-                        DrawCircleLines(bx / scale, by / scale, 5+ring, new Color(255, 255, 160, 64+alpha/2));
+                        DrawCircleLines(bx / scale, by / scale, 5 + ring, new Color(255, 255, 160, 64 + alpha / 2));
                     }
                 } else {
                     DrawPolyLines(new Vector2(sx / scale, sy / scale), 4, (cd / scale), 0, new Color(255, 200, 255, 255));
@@ -41,10 +41,10 @@ namespace aoc2022 {
         public string part1() {
             ASCIIRay renderer = new ASCIIRay(1440, 1080, 30, 24, "Day15");
             List<Scanner> scanners = new List<Scanner>();
-            foreach (var p in solver.data) scanners.Add(new Scanner(p[0]+ofsx, p[1]+ofsy, p[2]+ofsx, p[3]+ofsy));
+            foreach (var p in solver.data) scanners.Add(new Scanner(p[0] + ofsx, p[1] + ofsy, p[2] + ofsx, p[3] + ofsy));
             renderer.loop(cnt => {
-                if (cnt> 300) foreach (var s in scanners) s.step();
-                DrawRectangleLines(ofsx/scale,ofsy/scale,1000,1000,GREEN);
+                foreach (var s in scanners) s.step();
+                DrawRectangleLines(ofsx / scale, ofsy / scale, 1000, 1000, GREEN);
                 return cnt > 1000;
             });
             return "";

@@ -31,6 +31,10 @@ namespace aoc2022 {
             int factor = 10;
             int maxcnt = path.Count * factor + 400;
             float rot = 0.0f;
+            Model cube = LoadModelFromMesh(GenMeshCube(1.0f, 10.0f, 1.0f));
+            Model sphere = LoadModelFromMesh(GenMeshSphere(1.0f, 8, 8));
+            renderer.viewer.setupLights(solver.w, solver.h, 26.0f, new List<Model> { cube, sphere });
+
             renderer.loop(cnt => {
                 int idx = cnt / factor, nidx = idx + 1;
                 int ofs = cnt % factor;
@@ -55,12 +59,11 @@ namespace aoc2022 {
                     }
                 }
                 BeginMode3D(camera);
-                DrawSphereEx(new Vector3(px, pz + 0.5f, py), 0.5f, 6, 6, BLUE);
+                DrawModel(sphere, new Vector3(px, pz + 0.5f, py), 0.5f, BLUE);
                 for (int x = 0; x < solver.w; x++) {
                     for (int y = 0; y < solver.h; y++) {
                         int elev = solver.map[x, y] - 'a'; // 0-25
-                        DrawCube(new Vector3(x, elev / 4.0f, y), 1f, elev / 2.0f, 1f, new Color(elev * 10, 250 - elev * 10, 140, 255));
-                        DrawCubeWires(new Vector3(x, elev / 4.0f, y), 1f, elev / 2.0f, 1f, BLACK);
+                        DrawModel(cube, new Vector3(x, elev / 2 - 5, y), 1f, new Color(elev * 10, 250 - elev * 10, 140, 255));
                     }
                 }
                 EndMode3D();
@@ -69,6 +72,8 @@ namespace aoc2022 {
                 renderer.WriteXY(1, 2, "Elevation: " + pz1);
                 return cnt > maxcnt;
             });
+            UnloadModel(cube);
+            UnloadModel(sphere);
             return solver.part1();
         }
 

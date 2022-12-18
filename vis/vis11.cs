@@ -20,10 +20,12 @@ namespace aoc2022 {
             solver.run(20, (x, c, i) => { paths[i].Add((c, x)); return x / 3; });
             int maxcnt = paths.Select(x => x.Count).Max();
             Console.WriteLine(maxcnt);
-            ASCIIRay renderer = new ASCIIRay(1920, 1080, 60, 24, "Day11");
+            Viewer viewer = new Viewer(1920, 1080, 60, "Day11");
             Camera3D camera = new Camera3D();
             Model model = LoadModel("resources/CartoonMonkeyModel.obj");
-            Texture2D texture = LoadTexture("resources/Monkey_Diffuse.png");            
+            Model cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
+            viewer.setupLights(solver.monkeys.Count * 4.0f + 2, 4, 16, new List<Model> { model, cube });
+            Texture2D texture = LoadTexture("resources/Monkey_Diffuse.png");
             SetMaterialTexture(ref model, 0, MATERIAL_MAP_DIFFUSE, ref texture);
 
             camera.target = new Vector3(14.5f, 4.0f, 0.0f);
@@ -34,7 +36,7 @@ namespace aoc2022 {
             SetCameraMode(camera, CameraMode.CAMERA_FREE);
             // generate sprite position list
             int factor = 60;
-            renderer.loop(cnt => {
+            viewer.loop(cnt => {
                 BeginMode3D(camera);
                 float pz0 = (float)Math.Sin(Math.PI * (cnt % factor) / factor);
                 int[] stacks = new int[solver.monkeys.Count];
@@ -42,7 +44,7 @@ namespace aoc2022 {
                     int idx = (cnt + i) / factor;
                     int ofs = (cnt + i) % factor;
                     if (idx + 1 >= paths[i].Count) {
-                        (int fx, _) = paths[i][paths[i].Count-1];
+                        (int fx, _) = paths[i][paths[i].Count - 1];
                         stacks[fx]++;
                         continue;
                     }
@@ -51,19 +53,18 @@ namespace aoc2022 {
                     float px = 4.0f * (px1 * (factor - ofs) + px2 * ofs) / (float)factor;
                     float pz = (float)Math.Sin(Math.PI * ofs / factor) * (float)Math.Log2(w);
                     if (idx + 1 == paths[i].Count) pz = pz0;
-                    DrawCube(new Vector3(px, pz, 0), 1f, 1f, 1f, BLUE);
-                    DrawCubeWires(new Vector3(px, pz, 0), 1f, 1f, 1f, BLACK);
+                    DrawModel(cube, new Vector3(px, pz, 0), 1f, BLUE);
                 }
-                for (int i = 0; i < solver.monkeys.Count; i++) {                    
-                    DrawModel(model, new Vector3(i * 4.0f, pz0 - 4.0f, 0), 0.16f, WHITE);                    
-                    for (int j = 0; j < stacks[i]; j++) {
-                        DrawCube(new Vector3(i*4.0f + (j % 2) * 0.8f, -4.0f + (j / 2) * 0.8f, -2), 0.8f, 0.8f, 0.8f, BLUE);
-                        DrawCubeWires(new Vector3(i*4.0f + (j % 2) * 0.8f, -4.0f + (j / 2) * 0.8f, -2), 0.8f, 0.8f, 0.8f, BLACK);
-                    }
+                for (int i = 0; i < solver.monkeys.Count; i++) {
+                    DrawModel(model, new Vector3(i * 4.0f, pz0 - 4.0f, 0), 0.16f, WHITE);
+                    for (int j = 0; j < stacks[i]; j++)
+                        DrawModel(cube, new Vector3(i * 4.0f + (j % 2) * 0.8f, -4.0f + (j / 2) * 0.8f, -2), 0.8f, BLUE);
                 }
                 EndMode3D();
                 return cnt > (maxcnt * factor + 300);
             });
+            UnloadModel(model);
+            UnloadModel(cube);
             return solver.part1();
         }
 
