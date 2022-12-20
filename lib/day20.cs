@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace aoc2022 {
     public class Day20 : Solution {
         public List<(long, long)> data = new List<(long, long)>();
@@ -10,11 +12,11 @@ namespace aoc2022 {
             size = data.Count;
         }
 
-        public class BucketList<T> where T : notnull {
-            int size = 64; // sweet spot is around square root of N
-            List<List<T>> buckets = new List<List<T>> { new List<T>() };
-            Dictionary<T, int> idx = new Dictionary<T, int>();
-            public BucketList(List<T> source) { foreach (T value in source) Add(value); }
+        public class BucketList<T> : IEnumerable<T> where T : notnull {
+            public int size; // sweet spot is around square root of N
+            public List<List<T>> buckets = new List<List<T>> { new List<T>() };
+            public Dictionary<T, int> idx = new Dictionary<T, int>();
+            public BucketList(IEnumerable<T> source, int siz = 16) { size = siz; foreach (T value in source) Add(value); }
             public void Add(T value) {
                 if (buckets[buckets.Count - 1].Count == size) buckets.Add(new List<T>());
                 buckets[buckets.Count - 1].Add(value);
@@ -39,9 +41,12 @@ namespace aoc2022 {
             }
             public T Get(int index) {
                 int b = 0;
-                while (index > buckets[b].Count) index -= buckets[b++].Count;
+                while (index >= buckets[b].Count) index -= buckets[b++].Count;
                 return buckets[b][index];
             }
+
+            public IEnumerator<T> GetEnumerator() { foreach (var bucket in buckets) foreach (T item in bucket) yield return item; }
+            IEnumerator IEnumerable.GetEnumerator() { return this.GetEnumerator(); }
         }
 
         void mix(List<(long, long)> order, BucketList<(long, long)> values) {
@@ -60,14 +65,14 @@ namespace aoc2022 {
 
         public string part1() {
             var order = new List<(long, long)>(data);
-            var temp = new BucketList<(long, long)>(data);
+            var temp = new BucketList<(long, long)>(data, 64);
             mix(order, temp);
             return result(temp);
         }
 
         public string part2() {
             var order = data.Select(n => (n.Item1, n.Item2 * 811589153)).ToList();
-            var temp = new BucketList<(long, long)>(order);
+            var temp = new BucketList<(long, long)>(order, 64);
             for (int i = 0; i < 10; i++) mix(order, temp);
             return result(temp);
         }
