@@ -5,7 +5,7 @@ namespace aoc2022 {
             public double value;
             public string left, right, op;
         }
-        private Dictionary<string, Monkey> data = new Dictionary<string, Monkey>();
+        public Dictionary<string, Monkey> data = new Dictionary<string, Monkey>();
 
         public void parse(List<string> input) {
             foreach (var s in input) {
@@ -16,11 +16,12 @@ namespace aoc2022 {
             }
         }
 
-        (double, double) compute(string key) {
+        public (double, double) compute(string key, List<string>? order = null) {
+            if (order != null) order.Add(key);
             if (key == "humn") return (1, 0);
             if (data[key].op[0] == 'V') return (0, data[key].value);
-            var (lh, lv) = compute(data[key].left);
-            var (rh, rv) = compute(data[key].right);            
+            var (lh, lv) = compute(data[key].left, order);
+            var (rh, rv) = compute(data[key].right, order);
             switch (data[key].op[0]) {
                 case '+': return (lh + rh, lv + rv);
                 case '-': return (lh - rh, lv - rv);
@@ -39,8 +40,8 @@ namespace aoc2022 {
         public string part2() {
             var (lh, lv) = compute(data["root"].left);
             var (rh, rv) = compute(data["root"].right);
-            var ret = (lh > 0) ? ((rv - lv) / lh) : ((lv - rv) / rh);
-            return ret.ToString();
+            var ret = (lh != 0) ? ((rv - lv) / lh) : ((lv - rv) / rh);
+            return Math.Round(ret).ToString();
         }
     }
 }
