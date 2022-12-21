@@ -62,9 +62,9 @@ Day 19 part 2: 183 ms,   5 ips
 Day 20 parser: 92 µs,    10864 ips
 Day 20 part 1: 1 ms,     714 ips
 Day 20 part 2: 14 ms,    70 ips
-Day 21 parser: 262 µs,   3808 ips
-Day 21 part 1: 246 µs,   4055 ips
-Day 21 part 2: 242 µs,   4130 ips
+Day 21 parser: 281 µs,   3546 ips
+Day 21 part 1: 89 µs,    11168 ips
+Day 21 part 2: 82 µs,    12078 ips
 ```
 
 ```
