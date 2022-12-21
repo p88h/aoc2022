@@ -76,14 +76,13 @@ namespace aoc2022 {
             return tot.ToString();
         }
         public string part2() {
-            int ret = 1;
-            List<Packet> copy = new List<Packet>(packets);
+            int a = 1, b = 2;
             Packet two = new Packet(new Packet(new Packet(2))), six = new Packet(new Packet(new Packet(6)));
-            copy.Add(two);
-            copy.Add(six);
-            copy.Sort();
-            for (int i = 0; i < copy.Count; i++) if (copy[i] == two || copy[i] == six) ret *= i + 1;
-            return ret.ToString();
+            for (int i = 0; i < packets.Count; i++) {
+                if (packets[i].CompareTo(two) < 0) a++;
+                if (packets[i].CompareTo(six) < 0) b++;
+            }
+            return (a * b).ToString();
         }
     }
 }
