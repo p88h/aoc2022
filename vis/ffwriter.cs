@@ -11,7 +11,7 @@ using ImageLockMode = System.Drawing.Imaging.ImageLockMode;
 
 namespace aoc2022 {
     class FFWriter {
-        BlockingCollection<IVideoFrame> _frames = new BlockingCollection<IVideoFrame>(30);
+        BlockingCollection<IVideoFrame> _frames = new BlockingCollection<IVideoFrame>(300);
 
         int width, height;
         double framerate;
