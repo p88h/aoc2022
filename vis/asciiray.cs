@@ -20,7 +20,7 @@ namespace aoc2022 {
 #pragma warning disable SYSLIB0014
             if (!File.Exists(font_file)) using (var client = new WebClient()) client.DownloadFile(font_uri, font_file);
 #pragma warning restore SYSLIB0014
-            font = LoadFontEx(font_file, fsize, null, 250);
+            font = LoadFontEx(font_file, fsize, null, 16384);
         }
 
         public void Write(string msg) {
