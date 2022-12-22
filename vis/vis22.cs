@@ -36,18 +36,12 @@ namespace aoc2022 {
             return "";
         }
 
-        float shift(float s, float d) {
+        float turn(float s, float d) {
             float delta = Math.Abs(s - d);
             float sign = Math.Abs(s) > Math.Abs(d) || delta >= 180 ? -1 : 1;
             float diff = (180 - Math.Abs(delta - 180)) * sign;
-            if (s != d - diff) s = d - diff;
-            if (d < s) {
-                if (s - 5 <= d) return d;
-                return s - 3f;
-            } else {
-                if (s + 5 >= d) return d;
-                return s + 3f;
-            }
+            if (diff > 3) diff = 3; if (diff < -3) diff = -3;
+            return s + diff;
         }
 
         (float, float) side_angle(int side, float current_phi = 355) {
@@ -157,8 +151,8 @@ namespace aoc2022 {
                     EndTextureMode();
                 }
                 if (current_angle != target_angle) {
-                    current_angle.Item1 = shift(current_angle.Item1, target_angle.Item1);
-                    current_angle.Item2 = shift(current_angle.Item2, target_angle.Item2);
+                    current_angle.Item1 = turn(current_angle.Item1, target_angle.Item1);
+                    current_angle.Item2 = turn(current_angle.Item2, target_angle.Item2);
                     camera.position = orbital(current_angle.Item1, current_angle.Item2, 5, 5, 5, 20);
                     UpdateCamera(ref camera);
                 }
@@ -186,7 +180,7 @@ namespace aoc2022 {
                     dist = moves[++idx];
                     if (maxsleep > 0) maxsleep--;
                 } else return true;
-                return cnt > 3600;
+                return false;
             });
             return "";
         }
