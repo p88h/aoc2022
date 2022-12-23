@@ -4,7 +4,7 @@ using static Raylib_cs.Color;
 
 namespace aoc2022 {
     public class Vis23 : Day23 {
-        private ASCIIRay renderer = new ASCIIRay(1080, 1080, 30, 24, "Day22");
+        private ASCIIRay renderer = new ASCIIRay(1080, 1080, 30, 24, "Day23");
 
         public override string part2() {
             HashSet<(int x, int y)> pos = new HashSet<(int, int)>(data);
