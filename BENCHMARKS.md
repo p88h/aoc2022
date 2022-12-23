@@ -68,6 +68,9 @@ Day 21 part 2: 82 µs,    12078 ips
 Day 22 parser: 168 µs,   5935 ips
 Day 22 part 1: 124 µs,   8028 ips
 Day 22 part 2: 134 µs,   7461 ips
+Day 23 parser: 9 µs,     109051 ips
+Day 23 part 1: 11 ms,    89 ips
+Day 23 part 2: 1013 ms,  0 ips
 ```
 
 ```
