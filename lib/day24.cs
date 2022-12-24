@@ -19,14 +19,17 @@ namespace aoc2022 {
             List<(int, int)> stack = new List<(int, int)> { startpos };
             HashSet<int> visited = new HashSet<int>();
             List<(int, int)> moves = new List<(int, int)> { (-1, 0), (1, 0), (0, -1), (0, 1), (0, 0) };
-            int t = st, tm;
+            int t = st, tm, threshold = 10;
             while (stack.Count > 0) {
                 List<(int, int)> nstack = new List<(int, int)>();
                 t += 1; tm = t % (hsize * vsize);
                 int tx = hsize - (t % hsize);
                 int ty = vsize - (t % vsize);
+                int best = hsize + vsize;
+                foreach (var (x, y) in stack) if (Math.Abs(x - ex) + Math.Abs(y - ey) < best) best = Math.Abs(x - ex) + Math.Abs(y - ey);
                 foreach (var (x, y) in stack) {
-                    if (trace != null) trace.Add((t-1, x, y));
+                    if (Math.Abs(x - ex) + Math.Abs(y - ey) > best + threshold) continue;
+                    if (trace != null) trace.Add((t - 1, x, y));
                     if ((x, y) == startpos && tm != st) nstack.Add(startpos);
                     foreach (var (dx, dy) in moves) {
                         var (nx, ny) = (x + dx, y + dy);

@@ -8,8 +8,6 @@ namespace aoc2022 {
             int ret3 = trip(0, -1, hsize - 1, vsize, ret2, trace);
             int lastnum = 0, lost = 0;
             renderer.loop(cnt => {
-                if (cnt < 100) return false;
-                cnt -= 100;
                 if (cnt > ret3 + 100) return true;
                 if (cnt > ret3) cnt = ret3;
                 renderer.SetColor(160, 160, 160, 255);
