@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 namespace aoc2022 {
     public class Day24 : Solution {
 
-        public char[,] mapp = { };
-        public int hsize, vsize;
+        protected char[,] mapp = { };
+        protected int hsize, vsize;
 
         public void parse(List<string> input) {
             hsize = input[0].Length - 2;
@@ -13,7 +13,7 @@ namespace aoc2022 {
             for (int y = 0; y < vsize; y++) for (int x = 0; x < hsize; x++) mapp[y, x] = input[y + 1][x + 1];
         }
 
-        int trip(int sx, int sy, int ex, int ey, int st) {
+        protected int trip(int sx, int sy, int ex, int ey, int st, List<(int, int, int)>? trace = null) {
             (int, int) startpos = (sx, sy);
             (int, int) endpos = (ex, ey);
             List<(int, int)> stack = new List<(int, int)> { startpos };
@@ -26,6 +26,7 @@ namespace aoc2022 {
                 int tx = hsize - (t % hsize);
                 int ty = vsize - (t % vsize);
                 foreach (var (x, y) in stack) {
+                    if (trace != null) trace.Add((t-1, x, y));
                     if ((x, y) == startpos && tm != st) nstack.Add(startpos);
                     foreach (var (dx, dy) in moves) {
                         var (nx, ny) = (x + dx, y + dy);
