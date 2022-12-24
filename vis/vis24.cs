@@ -1,11 +1,3 @@
-using System.Numerics;
-using Raylib_cs;
-using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-using static Raylib_cs.MaterialMapIndex;
-using static Raylib_cs.ShaderLocationIndex;
-
 namespace aoc2022 {
     public class Vis24 : Day24 {
         private ASCIIRay renderer = new ASCIIRay(1280,720, 3, 16, "Day24");
@@ -21,10 +13,10 @@ namespace aoc2022 {
                 int cry = vsize - (cnt % vsize);
                 for (int y = 0; y < vsize; y++) {
                     for (int x = 0; x < hsize; x++) {
-                        if (lmap[y, (x + cnt) % hsize] != '.') renderer.WriteXY(x + 1, y + 1, "<");
-                        if (rmap[y, (x + crx) % hsize] != '.') renderer.WriteXY(x + 1, y + 1, ">");
-                        if (umap[(y + cnt) % vsize, x] != '.') renderer.WriteXY(x + 1, y + 1, "^");
-                        if (rmap[(y + cry) % vsize, x] != '.') renderer.WriteXY(x + 1, y + 1, "v");
+                        if (mapp[y, (x + cnt) % hsize] == '>') renderer.WriteXY(x + 1, y + 1, "<");
+                        if (mapp[y, (x + crx) % hsize] == '>') renderer.WriteXY(x + 1, y + 1, ">");
+                        if (mapp[(y + cnt) % vsize, x] == '^') renderer.WriteXY(x + 1, y + 1, "^");
+                        if (mapp[(y + cry) % vsize, x] == 'v') renderer.WriteXY(x + 1, y + 1, "v");
                     }
                 }
                 return cnt > 3600;

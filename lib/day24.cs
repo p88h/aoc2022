@@ -3,22 +3,14 @@ using System.Text.RegularExpressions;
 namespace aoc2022 {
     public class Day24 : Solution {
 
-        public char[,] lmap = { }, rmap = { }, umap = { }, dmap = { };
+        public char[,] mapp = { };
         public int hsize, vsize;
 
         public void parse(List<string> input) {
             hsize = input[0].Length - 2;
             vsize = input.Count - 2;
-            lmap = new char[vsize, hsize]; rmap = new char[vsize, hsize];
-            umap = new char[vsize, hsize]; dmap = new char[vsize, hsize];
-            for (int y = 1; y < input.Count - 1; y++) {
-                for (int x = 1; x < input[y].Length - 1; x++) {
-                    lmap[y - 1, x - 1] = input[y][x] == '<' ? '<' : '.';
-                    rmap[y - 1, x - 1] = input[y][x] == '>' ? '>' : '.';
-                    umap[y - 1, x - 1] = input[y][x] == '^' ? '^' : '.';
-                    dmap[y - 1, x - 1] = input[y][x] == 'v' ? 'v' : '.';
-                }
-            }
+            mapp = new char[vsize, hsize];
+            for (int y = 0; y < vsize; y++) for (int x = 0; x < hsize; x++) mapp[y, x] = input[y + 1][x + 1];
         }
 
         int trip(int sx, int sy, int ex, int ey, int st) {
@@ -41,8 +33,8 @@ namespace aoc2022 {
                         if (nx < 0 || ny < 0 || nx >= hsize || ny >= vsize) continue;
                         int code = (tm << 16) + (ny << 8) + nx;
                         if (visited.Contains(code)) continue;
-                        if (lmap[ny, (nx + t) % hsize] == '.' && rmap[ny, (nx + tx) % hsize] == '.' &&
-                            umap[(ny + t) % vsize, nx] == '.' && dmap[(ny + ty) % vsize, nx] == '.') {
+                        if (mapp[ny, (nx + t) % hsize] != '<' && mapp[ny, (nx + tx) % hsize] != '>' &&
+                            mapp[(ny + t) % vsize, nx] != '^' && mapp[(ny + ty) % vsize, nx] != 'v') {
                             visited.Add(code);
                             nstack.Add((nx, ny));
                         }
@@ -53,15 +45,12 @@ namespace aoc2022 {
             return -1;
         }
 
-        public virtual string part1() {
-            return trip(0, -1, hsize - 1, vsize, 0).ToString();
-        }
+        public virtual string part1() { return trip(0, -1, hsize - 1, vsize, 0).ToString(); }
 
         public virtual string part2() {
             int a = trip(0, -1, hsize - 1, vsize, 0);
             int b = trip(hsize - 1, vsize, 0, -1, a);
             int c = trip(0, -1, hsize - 1, vsize, b);
-            Console.WriteLine("A: " + a + " B: " + b + " C: " + c);
             return c.ToString();
         }
     }
