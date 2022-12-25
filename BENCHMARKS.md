@@ -119,9 +119,9 @@ Day 13 part 2: 55 µs,    17931 ips
 Day 14 parser: 152 µs,   6576 ips
 Day 14 part 1: 67 µs,    14820 ips
 Day 14 part 2: 285 µs,   3503 ips
-Day 15 parser: 1 ms,     520 ips
-Day 15 part 1: 358 ns,   2791777 ips
-Day 15 part 2: 875 ms,   1 ips
+Day 15 parser: 1 ms,     519 ips
+Day 15 part 1: 350 ns,   2849340 ips
+Day 15 part 2: 2 µs,     426661 ips
 Day 16 parser: 3 ms,     314 ips
 Day 16 part 1: 6 ms,     143 ips
 Day 16 part 2: 43 ms,    23 ips

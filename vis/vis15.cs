@@ -41,7 +41,7 @@ namespace aoc2022 {
         public string part1() {
             ASCIIRay renderer = new ASCIIRay(1440, 1080, 30, 24, "Day15");
             List<Scanner> scanners = new List<Scanner>();
-            foreach (var p in solver.data) scanners.Add(new Scanner(p[0] + ofsx, p[1] + ofsy, p[2] + ofsx, p[3] + ofsy));
+            foreach (var p in solver.data) scanners.Add(new Scanner(p.sx + ofsx, p.sy + ofsy, p.bx + ofsx, p.by + ofsy));
             renderer.loop(cnt => {
                 foreach (var s in scanners) s.step();
                 DrawRectangleLines(ofsx / scale, ofsy / scale, 1000, 1000, GREEN);
