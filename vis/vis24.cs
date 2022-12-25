@@ -34,13 +34,13 @@ namespace aoc2022 {
                     renderer.WriteXY(trace[tpos].x + 1 + ofsx, trace[tpos].y + 1 + ofsy, "@");
                     tpos++; num++;
                 }
-                if (num < lastnum) lost+=lastnum-num;
+                if (num < lastnum) lost += lastnum - num;
                 lastnum = num;
                 renderer.WriteXY(ofsx, ofsy - 2, "TIME: " + cnt);
                 renderer.WriteXY(ofsx, vsize + ofsy + 3, "@ ACTIVE: " + num);
-                if (lost>0) renderer.WriteXY(ofsx, vsize + ofsy + 4, "@ LOST IN THE BLIZZARD: " + lost);
-                if (cnt > ret) renderer.WriteXY(ofsx, vsize + ofsy + 6, "SNACKS LOST: YES"); else
-                if (cnt > ret2) renderer.WriteXY(ofsx, vsize + ofsy + 6, "SNACKS FOUND: YES");
+                if (lost > 0) renderer.WriteXY(ofsx, vsize + ofsy + 4, "@ LOST IN THE BLIZZARD: " + lost);
+                if (cnt > ret && cnt < ret2) renderer.WriteXY(ofsx, vsize + ofsy + 6, "SNACKS LOST: YES");
+                else if (cnt > ret2) renderer.WriteXY(ofsx, vsize + ofsy + 6, "SNACKS FOUND: YES");
                 return false;
             });
             return "";

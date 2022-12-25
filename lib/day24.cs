@@ -20,9 +20,12 @@ namespace aoc2022 {
             HashSet<int> visited = new HashSet<int>();
             List<(int, int)> moves = new List<(int, int)> { (-1, 0), (1, 0), (0, -1), (0, 1), (0, 0) };
             int t = st, tm, threshold = 10;
+            int lcm = hsize * vsize, d = 1;
+            foreach (var p in new int[]{2,3,5,7}) while (hsize % (d*p) == 0 && vsize % (d*p) == 0) d*=p;
+            lcm /= d;
             while (stack.Count > 0) {
                 List<(int, int)> nstack = new List<(int, int)>();
-                t += 1; tm = t % (hsize * vsize);
+                t += 1; tm = t % lcm;
                 int tx = hsize - (t % hsize);
                 int ty = vsize - (t % vsize);
                 int best = hsize + vsize;
