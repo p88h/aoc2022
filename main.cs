@@ -3,7 +3,7 @@
 namespace aoc2022 {
     public class Program {
 
-        public static void Bench(String prefix, Func<string> fun) {
+        public static long Bench(String prefix, Func<string> fun) {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Reset();
             stopwatch.Start();
@@ -26,6 +26,7 @@ namespace aoc2022 {
             long its = (1000 * count) / time;
             long npi = (time * mul) / count;
             Console.WriteLine(prefix + npi + unit + ",\t " + its + " ips");
+            return (time * 1000) / count;
         }
 
         public static void Main(string[] args) {
@@ -57,6 +58,7 @@ namespace aoc2022 {
             }
 
             Console.WriteLine("Selected days: " + String.Join(",", inputDays));
+            long[] tot = new long[3];
             foreach (var day in inputDays) {
                 string className = "aoc2022." + classPrefix + day;
                 Type? type = Type.GetType(className);
@@ -65,13 +67,13 @@ namespace aoc2022 {
                     List<String> input = File.ReadAllLines("input/day" + day + ".txt").ToList();
                     sol!.parse(input);
                     if (benchmark) {
-                        Bench("Day " + day + " parser: ", () => {
+                        tot[0] += Bench("Day " + day + " parser: ", () => {
                             Solution? s = (Solution?)Activator.CreateInstance(type);
                             s!.parse(input);
                             return "";
                         });
-                        Bench("Day " + day + " part 1: ", sol.part1);
-                        Bench("Day " + day + " part 2: ", sol.part2);
+                        tot[1] += Bench("Day " + day + " part 1: ", sol.part1);
+                        tot[2] += Bench("Day " + day + " part 2: ", sol.part2);
                     } else {
                         Console.WriteLine("Day " + day + " part 1: " + sol.part1());
                         Console.WriteLine("Day " + day + " part 2: " + sol.part2());
@@ -79,6 +81,12 @@ namespace aoc2022 {
                 } else {
                     Console.WriteLine("Class " + className + " not found");
                 }
+            }
+            if (benchmark && inputDays.Count > 1) {
+                Console.WriteLine("Total parse : " +  tot[0]/1000 + " ms");
+                Console.WriteLine("Total part 1: " +  tot[1]/1000 + " ms");
+                Console.WriteLine("Total part 2: " +  tot[2]/1000 + " ms");
+                Console.WriteLine("  AOC TOTAL : " +  (tot[0]+tot[1]+tot[2])/1000 + " ms");
             }
         }
     }
