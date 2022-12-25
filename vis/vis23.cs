@@ -4,11 +4,12 @@ using static Raylib_cs.Color;
 
 namespace aoc2022 {
     public class Vis23 : Day23 {
-        private ASCIIRay renderer = new ASCIIRay(1080, 1080, 30, 24, "Day23");
+        private ASCIIRay renderer = new ASCIIRay(1080, 1080, 60, 24, "Day23");
 
         public override string part2() {
-            HashSet<(int x, int y)> pos = new HashSet<(int, int)>(data);
-            int xofs = 20, yofs = 20, maxcnt = 1000000;
+            var pos = new List<(int x, int y)>(data);
+            int xofs = 4, yofs = 4, maxcnt = 1000000;
+            foreach (var (x, y) in pos) scratch[x, y] = 3000;
             renderer.loop(cnt => {
                 renderer.WriteXY(1, 1, "Round: " + cnt);
                 foreach (var elf in pos) {
@@ -23,7 +24,7 @@ namespace aoc2022 {
 
                 }
                 bool moved;
-                pos = step(pos, cnt, out moved);
+                pos = step(pos, 3000 + cnt, out moved);
                 if (!moved && cnt + 300 < maxcnt) maxcnt = cnt + 300;
                 return cnt > maxcnt;
             });

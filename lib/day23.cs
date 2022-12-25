@@ -3,27 +3,32 @@ using System.Text.RegularExpressions;
 namespace aoc2022 {
     public class Day23 : Solution {
 
-        public List<(int, int)> data = new List<(int, int)>();
+        protected List<(int, int)> data = new List<(int, int)>();
+        protected int[,] scratch = { }, dedup = { };
 
         public void parse(List<string> input) {
-            for (int y = 0; y < input.Count; y++) for (int x = 0; x < input[y].Length; x++) if (input[y][x] == '#') data.Add((x, y));
+            scratch = new int[input[0].Length * 2, input.Count * 2];
+            for (int y = 0; y < input.Count; y++)
+                for (int x = 0; x < input[y].Length; x++)
+                    if (input[y][x] == '#') data.Add((x + 16, y + 16));
         }
 
-        public HashSet<(int, int)> step(HashSet<(int x, int y)> start, int round, out bool moved) {
-            HashSet<(int, int)> tmp = new HashSet<(int, int)>();
-            Dictionary<(int, int), (int, int)> plan = new Dictionary<(int, int), (int, int)>();
-            Dictionary<(int, int), int> dedup = new Dictionary<(int, int), int>();
+        protected List<(int, int)> step(List<(int x, int y)> start, int round, out bool moved) {
+            List<(int x, int y)> tmplan = new List<(int, int)>(start.Count);
             List<(int dx, int dy)> moves = new List<(int, int)> { (0, -1), (0, 1), (-1, 0), (1, 0) };
             List<(int dx, int dy)> scan = new List<(int, int)> { (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0) };
             int[] move2scan = { 0, 4, 6, 2 };
+            int[] cnt = new int[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             moved = false;
             foreach (var (x, y) in start) { // part 1
-                (int, int) npos = (x, y);
-                List<int> cnt = new List<int>();
+                (int x, int y) npos = (x, y);
                 int tot = 0;
-                foreach (var (dx, dy) in scan) { cnt.Add(start.Contains((x + dx, y + dy)) ? 1 : 0); tot+=cnt[cnt.Count-1]; }                
+                for (int s = 0; s < 8; s++) {
+                    cnt[s] = ((scratch[x + scan[s].dx, y + scan[s].dy] & 0xFFFF) == round) ? 1 : 0;
+                    tot += cnt[s];
+                }
                 if (tot != 0) {
-                    cnt.Add(cnt[0]);
+                    cnt[8] = cnt[0];
                     for (int i = 0; i < 4; i++) {
                         int idx = (i + round) % 4;
                         int spos = move2scan[idx];
@@ -35,17 +40,28 @@ namespace aoc2022 {
                     }
                     moved = true;
                 }
-                plan[(x,y)] = npos;
-                if (dedup.ContainsKey(npos)) dedup[npos] += 1; else dedup[npos] = 1;
+                tmplan.Add(npos);
+                scratch[npos.x, npos.y] += 1 << 16;
             }
-            foreach (var (cpos, npos) in plan) if (dedup[npos] == 1) tmp.Add(npos); else tmp.Add(cpos);
-            return tmp;
+            for (int i = 0; i < start.Count; i++) {
+                (int x, int y) npos = tmplan[i];
+                if (scratch[npos.x, npos.y] >> 16 == 1) {
+                    scratch[start[i].x, start[i].y] = 0;
+                    scratch[npos.x, npos.y] = round + 1;
+                } else {
+                    scratch[npos.x, npos.y] = 0;
+                    scratch[start[i].x, start[i].y] = round + 1;
+                    tmplan[i] = start[i];
+                }
+            }
+            return tmplan;
         }
 
         public virtual string part1() {
-            HashSet<(int x, int y)> pos = new HashSet<(int, int)>(data);
+            var pos = new List<(int x, int y)>(data);
             bool moved;
-            for (int i = 0; i < 10; i++) pos = step(pos, i, out moved);
+            foreach (var (x, y) in pos) scratch[x, y] = 1000;
+            for (int i = 0; i < 10; i++) pos = step(pos, 1000 + i, out moved);
             var xlist = pos.Select(p => p.x).ToList();
             var ylist = pos.Select(p => p.y).ToList();
             var rsize = (xlist.Max() - xlist.Min() + 1) * (ylist.Max() - ylist.Min() + 1);
@@ -53,10 +69,11 @@ namespace aoc2022 {
         }
 
         public virtual string part2() {
-            HashSet<(int x, int y)> pos = new HashSet<(int, int)>(data);
+            var pos = new List<(int x, int y)>(data);
             bool moved = true;
             int round = 0;
-            while (moved) pos = step(pos, round++, out moved);
+            foreach (var (x, y) in pos) scratch[x, y] = 2000;
+            while (moved) pos = step(pos, 2000 + (round++), out moved);
             return round.ToString();
         }
     }
