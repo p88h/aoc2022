@@ -7,7 +7,7 @@ namespace aoc2022 {
         private ASCIIRay renderer = new ASCIIRay(1080, 1080, 60, 24, "Day23");
 
         public override string part2() {
-            var pos = new List<(int x, int y)>(data);
+            (int x, int y)[] pos = data.ToArray();
             int xofs = 4, yofs = 4, maxcnt = 1000000;
             foreach (var (x, y) in pos) scratch[x, y] = 3000;
             renderer.loop(cnt => {
@@ -23,8 +23,7 @@ namespace aoc2022 {
                     DrawRectangle((elf.x + xofs) * 7 + 1, (elf.y + yofs) * 7 - 1, 2, 2, BLUE);
 
                 }
-                bool moved;
-                pos = step(pos, 3000 + cnt, out moved);
+                bool moved = step(pos, 3000 + cnt);
                 if (!moved && cnt + 300 < maxcnt) maxcnt = cnt + 300;
                 return cnt > maxcnt;
             });

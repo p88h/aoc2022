@@ -4,23 +4,25 @@ namespace aoc2022 {
     public class Day23 : Solution {
 
         protected List<(int, int)> data = new List<(int, int)>();
-        protected int[,] scratch = { }, dedup = { };
+        protected int[,] scratch = { };
+        (int x, int y)[] tmp = { };
 
         public void parse(List<string> input) {
             scratch = new int[input[0].Length * 2, input.Count * 2];
             for (int y = 0; y < input.Count; y++)
                 for (int x = 0; x < input[y].Length; x++)
                     if (input[y][x] == '#') data.Add((x + 16, y + 16));
+            tmp = new (int x, int y)[data.Count];
         }
 
-        protected List<(int, int)> step(List<(int x, int y)> start, int round, out bool moved) {
-            List<(int x, int y)> tmplan = new List<(int, int)>(start.Count);
-            List<(int dx, int dy)> moves = new List<(int, int)> { (0, -1), (0, 1), (-1, 0), (1, 0) };
-            List<(int dx, int dy)> scan = new List<(int, int)> { (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0) };
+        protected bool step((int x, int y)[] work, int round) {
+            (int dx, int dy)[] moves = { (0, -1), (0, 1), (-1, 0), (1, 0) };
+            (int dx, int dy)[] scan = { (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0) };
             int[] move2scan = { 0, 4, 6, 2 };
-            int[] cnt = new int[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            moved = false;
-            foreach (var (x, y) in start) { // part 1
+            int[] cnt = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            bool moved = false;
+            for (int p = 0; p < work.Length; p++) { // part 1
+                (int x, int y) = work[p];
                 (int x, int y) npos = (x, y);
                 int tot = 0;
                 for (int s = 0; s < 8; s++) {
@@ -40,41 +42,39 @@ namespace aoc2022 {
                     }
                     moved = true;
                 }
-                tmplan.Add(npos);
+                tmp[p] = npos;
                 scratch[npos.x, npos.y] += 1 << 16;
             }
-            for (int i = 0; i < start.Count; i++) {
-                (int x, int y) npos = tmplan[i];
+            for (int i = 0; i < work.Length; i++) {
+                (int x, int y) npos = tmp[i];
                 if (scratch[npos.x, npos.y] >> 16 == 1) {
-                    scratch[start[i].x, start[i].y] = 0;
+                    scratch[work[i].x, work[i].y] = 0;
                     scratch[npos.x, npos.y] = round + 1;
+                    work[i] = npos;
                 } else {
                     scratch[npos.x, npos.y] = 0;
-                    scratch[start[i].x, start[i].y] = round + 1;
-                    tmplan[i] = start[i];
+                    scratch[work[i].x, work[i].y] = round + 1;
                 }
             }
-            return tmplan;
+            return moved;
         }
 
         public virtual string part1() {
-            var pos = new List<(int x, int y)>(data);
-            bool moved;
+            (int x, int y)[] pos = data.ToArray();
             foreach (var (x, y) in pos) scratch[x, y] = 1000;
-            for (int i = 0; i < 10; i++) pos = step(pos, 1000 + i, out moved);
+            for (int i = 0; i < 10; i++) step(pos, 1000 + i);
             var xlist = pos.Select(p => p.x).ToList();
             var ylist = pos.Select(p => p.y).ToList();
             var rsize = (xlist.Max() - xlist.Min() + 1) * (ylist.Max() - ylist.Min() + 1);
-            return (rsize - pos.Count).ToString();
+            return (rsize - pos.Length).ToString();
         }
 
         public virtual string part2() {
-            var pos = new List<(int x, int y)>(data);
-            bool moved = true;
+            var pos = data.ToArray();
             int round = 0;
             foreach (var (x, y) in pos) scratch[x, y] = 2000;
-            while (moved) pos = step(pos, 2000 + (round++), out moved);
-            return round.ToString();
+            while (step(pos, 2000 + round)) round++;
+            return (round+1).ToString();
         }
     }
 }
