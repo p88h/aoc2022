@@ -22,47 +22,56 @@ namespace aoc2022 {
             return (nrs, ncs, w);
         }
 
-        int maxsim(int[] rs, int[] cs, int[] blueprint, int r, int maxr) {
+        int maxsim(int[] rs, int[] cs, int[] blueprint, int r, int maxr, ref int max_score) {
             int max = 0, w;
             int[] nrs, ncs;
             if (r > maxr) return 0;
-            if (r == maxr) return cs[3];                        
+            if (r == maxr) { max_score = Math.Max(max_score, cs[3]); return cs[3]; };
+            int tmp = cs[3] + rs[3] * (maxr - r);
+            // Update current projected output.
+            max_score = Math.Max(max_score, tmp);
+            // Assuming current projected output and building a new geode robot every round; 
+            // the sum is the arithmetic sequence sum which is 
+            if (tmp + (maxr - r) * (maxr - r - 1) / 2 < max_score) return cs[3];
             // check if we can build a geode robot first. No max.
             if (rs[2] > 0) {
                 (nrs, ncs, w) = nextState(rs, cs, 3, 0, blueprint[4], 2, blueprint[5]);
-                int tmp = cs[3] + rs[3] * (maxr - r);
-                if (r + w <= maxr) tmp = maxsim(nrs, ncs, blueprint, r + w, maxr);
+                if (r + w <= maxr) tmp = maxsim(nrs, ncs, blueprint, r + w, maxr, ref max_score);
                 max = Math.Max(max, tmp);
                 if (w == 1) return max;
+                // can't build a new robot at all. 
+                if (r + w > maxr && cs[2] + (maxr - r) * (maxr - r - 1) / 2 < blueprint[5]) return max;
             }
             // build ore robot next, up to 4 max.
             if (rs[0] < 4) {
                 (nrs, ncs, w) = nextState(rs, cs, 0, 0, blueprint[0], 0, 0);
-                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr));
+                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr, ref max_score));
             }
             // same for a clay robot, up to 8 max.
             if (rs[1] < 8) {
                 (nrs, ncs, w) = nextState(rs, cs, 1, 0, blueprint[1], 0, 0);
-                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr));
+                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr, ref max_score));
             }
             // same for an obsidian robot, up to 8 max.
             if (rs[1] > 0 && rs[2] < 8) {
                 (nrs, ncs, w) = nextState(rs, cs, 2, 0, blueprint[2], 1, blueprint[3]);
-                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr));
+                max = Math.Max(max, maxsim(nrs, ncs, blueprint, r + w, maxr, ref max_score));
             }
             return max;
         }
 
         public string part1() {
+            int[] bpscores = new int[data.Count]; 
             return Enumerable.Range(0, data.Count).AsParallel()
-                .Select(idx => (idx + 1) * maxsim(new int[] { 1, 0, 0, 0 }, new int[4] { 1, 0, 0, 0 }, data[idx], 1, 24) )
+                .Select(idx => (idx + 1) * maxsim(new int[] { 1, 0, 0, 0 }, new int[4] { 1, 0, 0, 0 }, data[idx], 1, 24, ref bpscores[idx]))
                 .Sum().ToString();
         }
 
         public string part2() {
+            int[] bpscores = new int[3]; 
             return Enumerable.Range(0, 3).AsParallel()
-                .Select(idx => maxsim(new int[] { 1, 0, 0, 0 }, new int[4] { 1, 0, 0, 0 }, data[idx], 1, 32) )
-                .Aggregate((t,n) => t*n).ToString();
+                .Select(idx => maxsim(new int[] { 1, 0, 0, 0 }, new int[4] { 1, 0, 0, 0 }, data[idx], 1, 32, ref bpscores[idx]))
+                .Aggregate((t, n) => t * n).ToString();
         }
     }
 }
