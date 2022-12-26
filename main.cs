@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace aoc2022 {
     public class Program {
@@ -7,37 +8,40 @@ namespace aoc2022 {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Reset();
             stopwatch.Start();
-            long count = 0, time = 0;
+            long count = 0;
             while (stopwatch.ElapsedMilliseconds < 999) {
                 fun();
                 count++;
             }
             stopwatch.Stop();
-            time = stopwatch.ElapsedMilliseconds;
-            int mul = 1;
+            long time_usec = stopwatch.ElapsedMilliseconds * 1000, time = time_usec;
             string unit = " ms";
-            if (count > 1000000) {
-                mul = 1000000;
+            if (count > 500000) {
+                time *= 1000;
                 unit = " ns";
-            } else if (count > 1000) {
-                mul = 1000;
+            } else if (count > 500) {
                 unit = " µs";
+            } else {
+                time /= 1000;
             }
-            long its = (1000 * count) / time;
-            long npi = (time * mul) / count;
-            Console.WriteLine(prefix + npi + unit + ",\t " + its + " ips");
-            return (time * 1000) / count;
+            long tpi = time / count;
+            long upi = time_usec / count;
+            int[] scale_ms = { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80 };
+            var sb = "[----------] ".ToArray();
+            for (int i = 0; i < scale_ms.Length; i++) if ((upi + 500) / 1000 > scale_ms[i]) sb[i + 1] = '*';
+            Console.WriteLine(prefix + tpi + unit + ",\t " + new string(sb) + count + " ips");
+            return upi;
         }
 
         public static void Main(string[] args) {
             List<string> inputDays = new List<string>();
-            bool runAll = false;
-            bool benchmark = false;
+            bool runAll = false, benchmark = false, parallel = false;
             string classPrefix = "Day";
             for (int i = 0; i < args.Length; i++) {
                 switch (args[i]) {
                     case "all": runAll = true; break;
                     case "bench": benchmark = true; break;
+                    case "parallel": parallel = true; break;
                     case "vis": classPrefix = "Vis"; break;
                     case "rec": ViewerOptions.recordVideo = true; break;
                     default: inputDays.AddRange(args[i].Split(",")); break;
@@ -58,8 +62,11 @@ namespace aoc2022 {
             }
 
             Console.WriteLine("Selected days: " + String.Join(",", inputDays));
-            long[] tot = new long[3];
-            foreach (var day in inputDays) {
+            ConcurrentBag<long> tot0 = new ConcurrentBag<long>(), tot1 = new ConcurrentBag<long>(), tot2 = new ConcurrentBag<long>();
+            int maxCores = Math.Min(8, Environment.ProcessorCount + 1) / 2;
+            var opts = new ParallelOptions() { MaxDegreeOfParallelism = parallel ? maxCores : 1 };
+            if (parallel && maxCores > 1) Console.WriteLine("Parallel execution: " + maxCores + " threads");
+            Parallel.ForEach(inputDays, opts, day => {
                 string className = "aoc2022." + classPrefix + day;
                 Type? type = Type.GetType(className);
                 if (type != null) {
@@ -67,13 +74,13 @@ namespace aoc2022 {
                     List<String> input = File.ReadAllLines("input/day" + day + ".txt").ToList();
                     sol!.parse(input);
                     if (benchmark) {
-                        tot[0] += Bench("Day " + day + " parser: ", () => {
+                        tot0.Add(Bench("Day " + day + " parser: ", () => {
                             Solution? s = (Solution?)Activator.CreateInstance(type);
                             s!.parse(input);
                             return "";
-                        });
-                        tot[1] += Bench("Day " + day + " part 1: ", sol.part1);
-                        tot[2] += Bench("Day " + day + " part 2: ", sol.part2);
+                        }));
+                        tot1.Add(Bench("Day " + day + " part 1: ", sol.part1));
+                        tot2.Add(Bench("Day " + day + " part 2: ", sol.part2));
                     } else {
                         Console.WriteLine("Day " + day + " part 1: " + sol.part1());
                         Console.WriteLine("Day " + day + " part 2: " + sol.part2());
@@ -81,12 +88,12 @@ namespace aoc2022 {
                 } else {
                     Console.WriteLine("Class " + className + " not found");
                 }
-            }
+            });
             if (benchmark && inputDays.Count > 1) {
-                Console.WriteLine("Total parse : " +  tot[0]/1000 + " ms");
-                Console.WriteLine("Total part 1: " +  tot[1]/1000 + " ms");
-                Console.WriteLine("Total part 2: " +  tot[2]/1000 + " ms");
-                Console.WriteLine("  AOC TOTAL : " +  (tot[0]+tot[1]+tot[2])/1000 + " ms");
+                Console.WriteLine("Total parse : " + tot0.Sum() / 1000 + " ms");
+                Console.WriteLine("Total part 1: " + tot1.Sum() / 1000 + " ms");
+                Console.WriteLine("Total part 2: " + tot2.Sum() / 1000 + " ms");
+                Console.WriteLine("Total AOC   : " + (tot0.Sum() + tot1.Sum() + tot2.Sum()) / 1000 + " ms");
             }
         }
     }
