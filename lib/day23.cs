@@ -63,6 +63,7 @@ namespace aoc2022 {
             (int x, int y)[] pos = data.ToArray();
             foreach (var (x, y) in pos) scratch[x, y] = 1000;
             for (int i = 0; i < 10; i++) step(pos, 1000 + i);
+            foreach (var (x, y) in pos) scratch[x, y] = 0;
             var xlist = pos.Select(p => p.x).ToList();
             var ylist = pos.Select(p => p.y).ToList();
             var rsize = (xlist.Max() - xlist.Min() + 1) * (ylist.Max() - ylist.Min() + 1);
@@ -74,6 +75,7 @@ namespace aoc2022 {
             int round = 0;
             foreach (var (x, y) in pos) scratch[x, y] = 2000;
             while (step(pos, 2000 + round)) round++;
+            foreach (var (x, y) in pos) scratch[x, y] = 0;
             return (round+1).ToString();
         }
     }
