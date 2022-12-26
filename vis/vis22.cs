@@ -46,12 +46,12 @@ namespace aoc2022 {
 
         (float, float) side_angle(int side, float current_phi = 355) {
             switch (side) {
-                case 0: return (current_phi, 5);
+                case 0: return (85, 85);
                 case 1: return (355, 85);
-                case 2: return (85, 85);
+                case 2: return (current_phi, 175);
                 case 3: return (175, 85);
-                case 4: return (current_phi, 175);
-                case 5: return (265, 85);
+                case 4: return (265, 85);
+                case 5: return (current_phi, 5);
             }
             return (current_phi, current_phi);
         }
@@ -67,25 +67,25 @@ namespace aoc2022 {
 
         public override string part2() {
             int x = xmin[0], y = 0, dx = 1, dy = 0, idx = 0, dist = moves[0], face = 0;
-            string faces = "⬅⬆⮕⬇";
+            string faces = "⮕⬇⬅⬆";
 
             Camera3D camera = new Camera3D();
             List<Model> sides = new List<Model>();
 
-            camera.target = new Vector3(5, 5, 5);
-            camera.position = new Vector3(5, 22, 5.001f);
+            camera.target = new Vector3(0, 0, 0);
+            camera.position = orbital(85, 85, 0, 0, 0, 20);
             camera.up = new Vector3(0, 1, 0);
             camera.fovy = 45.0f;
             camera.projection = CAMERA_PERSPECTIVE;
             SetCameraMode(camera, CameraMode.CAMERA_CUSTOM);
             List<RenderTexture2D> textures = new List<RenderTexture2D>();
+            Model model = LoadModel("resources/cube.obj");
             for (int i = 0; i < 6; i++) {
                 RenderTexture2D rtex = LoadRenderTexture(50 * 24, 50 * 24);
                 textures.Add(rtex);
-                Model model = LoadModelFromMesh(GenMeshPlane(10, 10, 5, 5));
-                SetMaterialTexture(ref model, 0, MATERIAL_MAP_DIFFUSE, ref rtex.texture);
-                sides.Add(model);
+                SetMaterialTexture(ref model, i, MATERIAL_MAP_DIFFUSE, ref rtex.texture);
             }
+            sides.Add(model);
             var shader = LoadShader("resources/lighting.vs", "resources/lighting.fs");
             unsafe {
                 shader.locs[(int)SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
@@ -96,19 +96,18 @@ namespace aoc2022 {
             Light[] lights = new Light[6];
             for (int i = 0; i < 6; i++) {
                 var (phi, theta) = side_angle(i);
-                var lightPos = orbital(phi, theta, 5, 5, 5, 30);
-                var targetPos = orbital(phi, theta, 5, 5, 5, 10);
+                var lightPos = orbital(phi, theta, 0, 0, 0, 30);
+                var targetPos = orbital(phi, theta, 0, 0, 0, 5);
                 lights[i] = Rlights.CreateLight(i, LightType.LIGHT_POINT, lightPos, targetPos, RAYWHITE, shader);
             }
             unsafe {
-                foreach (var model in sides) model.materials[0].shader = shader;
+                for (int i = 0; i < 6; i++) model.materials[i].shader = shader;
             }
             List<(int, int)> texpos = new List<(int, int)> { (50, 0), (100, 0), (50, 50), (0, 100), (50, 100), (0, 150) };
-            List<(bool, bool)> flip = new List<(bool, bool)> { (true, false), (true, false), (true, false), (false, true), (true, false), (true, true) };
             int last_side = 0, current_side = 0;
-            (float, float) target_angle = (85, 5), current_angle = target_angle; ;
+            (float, float) target_angle = (85, 85), current_angle = target_angle; ;
             int sleep = 0, maxsleep = 10;
-            renderer.SetColor(160,160,160,255);
+            renderer.SetColor(160, 160, 160, 255);
             renderer.loop(cnt => {
                 mapp[y, x] = faces[face];
                 for (int i = 0; i < 6; i++) {
@@ -127,42 +126,22 @@ namespace aoc2022 {
                     DrawRectangleLines(0, 0, 50 * 24, 50 * 24, WHITE);
                     for (int ty = 0; ty < 50; ty++) for (int tx = 0; tx < 50; tx++) {
                             char ch = mapp[ty + texpos[i].Item2, tx + texpos[i].Item1];
-                            int dx = flip[i].Item1 ? tx : 49 - tx;
-                            int dy = flip[i].Item2 ? ty : 49 - ty;
-                            if (flip[i].Item1 && ch == '⮕') ch = '⬅';
-                            else if (flip[i].Item1 && ch == '⬅') ch = '⮕';
-                            if (flip[i].Item2 && ch == '⬇') ch = '⬆';
-                            else if (flip[i].Item2 && ch == '⬆') ch = '⬇';
-                            if (i == 5) {
-                                (dx, dy) = (dy, dx);
-                                switch (ch) {
-                                    case '⮕': ch = '⬇'; break;
-                                    case '⬅': ch = '⬆'; break;
-                                    case '⬆': ch = '⬅'; break;
-                                    case '⬇': ch = '⮕'; break;
-                                }
-                            }
-                            if ((ty + texpos[i].Item2, tx + texpos[i].Item1) == (y,x)) {
-                                renderer.SetColor(200,250,200,255);
-                                renderer.WriteXY(2 * dx, dy, ch.ToString());
-                                renderer.SetColor(160,160,160,255);
-                            } else if (ch != '.') renderer.WriteXY(2 * dx, dy, ch.ToString());
+                            if ((ty + texpos[i].Item2, tx + texpos[i].Item1) == (y, x)) {
+                                renderer.SetColor(200, 250, 200, 255);
+                                renderer.WriteXY(2 * tx, ty, ch.ToString());
+                                renderer.SetColor(160, 160, 160, 255);
+                            } else if (ch != '.') renderer.WriteXY(2 * tx, ty, ch.ToString());
                         }
                     EndTextureMode();
                 }
                 if (current_angle != target_angle) {
                     current_angle.Item1 = turn(current_angle.Item1, target_angle.Item1);
                     current_angle.Item2 = turn(current_angle.Item2, target_angle.Item2);
-                    camera.position = orbital(current_angle.Item1, current_angle.Item2, 5, 5, 5, 20);
+                    camera.position = orbital(current_angle.Item1, current_angle.Item2, 0, 0, 0, 20);
                     UpdateCamera(ref camera);
                 }
                 BeginMode3D(camera);
-                DrawModelEx(sides[0], new Vector3(5, 10, 5), new Vector3(0, 1, 0), 0, new Vector3(1, 1, 1), WHITE);
-                DrawModelEx(sides[1], new Vector3(10, 5, 5), new Vector3(0, 0, 1), 270, new Vector3(1, 1, 1), WHITE);
-                DrawModelEx(sides[2], new Vector3(5, 5, 10), new Vector3(1, 0, 0), 90, new Vector3(1, 1, 1), WHITE);
-                DrawModelEx(sides[3], new Vector3(0, 5, 5), new Vector3(0, 0, 1), 90, new Vector3(1, 1, 1), WHITE);
-                DrawModelEx(sides[4], new Vector3(5, 0, 5), new Vector3(1, 0, 0), 180, new Vector3(1, 1, 1), WHITE);
-                DrawModelEx(sides[5], new Vector3(5, 5, 0), new Vector3(1, 0, 0), 270, new Vector3(1, 1, 1), WHITE);
+                DrawModelEx(sides[0], new Vector3(0, 0, 0), new Vector3(0,1,0), 0, new Vector3(1, 1, 1), WHITE);
                 EndMode3D();
                 if (sleep <= maxsleep) {
                     sleep++;

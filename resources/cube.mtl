@@ -1,0 +1,42 @@
+newmtl CubeA
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
+newmtl CubeB
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
+newmtl CubeC
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
+newmtl CubeD
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
+newmtl CubeE
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
+newmtl CubeF
+Kd 1 1 1
+Ns 96.0784
+d 1
+illum 1
+Ka 0 0 0
+Ks 1 1 1
