@@ -49,13 +49,16 @@ namespace aoc2022 {
         public string part1() {
             List<(int, int, int, int)> states = new List<(int, int, int, int)> { (start, 0, 0, 0) };
             int[] best = new int[4194304];
-            int skipcnt = 0;
-            int max = 0;
+            int skipcnt = 0, max = 0, threshold = 400;
             for (int round = 1; round <= 29; round++) {
                 List<(int, int, int, int)> nstates = new List<(int, int, int, int)>();
+                int tbest = 0;
+                foreach (var (n, bits, flow, acc) in states) { if (acc + flow * (30 - round + 1) > tbest) tbest = acc + flow * (30 - round + 1); }
                 foreach (var (n, bits, flow, acc) in states) {
                     int code = (n << 16) + bits;
                     int projected = acc + flow * (30 - round + 1);
+                    // aggressive pruning
+                    if (projected < tbest - threshold) continue;
                     if (best[code] > projected + 1) {
                         skipcnt++;
                         continue;
@@ -128,10 +131,15 @@ namespace aoc2022 {
             List<List<State>> stacks = new List<List<State>>();
             stacks.Add(new List<State> { new State { pa = start, pb = start } });
             for (int i = 1; i < 26; i++) stacks.Add(new List<State>());
+            int threshold = 900;
             for (int time = 0; time < 26; time++) {
+                int tbest = 0;
+                foreach (State s in stacks[time]) { if (s.acc + s.fa * (26 - s.ta) > tbest) tbest = s.acc + s.fa * (26 - s.ta); }
                 foreach (State s in stacks[time]) {
                     // drop out of time 
                     int projection = s.acc + s.fa * (26 - s.ta);
+                    // aggressive pruning
+                    if (projection < tbest - threshold) continue;
                     if (s.tb <= 26) projection += s.fb * (26 - s.tb);
                     if (projection > max) max = projection;
                     // this may be a bit wonky, since it doesn't really consider where we are or anything, 
