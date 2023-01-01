@@ -70,7 +70,7 @@ Day 22 part 1: 121 µs,   [----------] 8225 ips
 Day 22 part 2: 134 µs,   [----------] 7444 ips
 Day 23 parser: 20 µs,    [----------] 48140 ips
 Day 23 part 1: 1103 µs,  [----------] 905 ips
-Day 23 part 2: 55 ms,    [*******---] 18 ips
+Day 23 part 2: 44 ms,    [******----] 23 ips
 Day 24 parser: 3 µs,     [----------] 312778 ips
 Day 24 part 1: 1307 µs,  [----------] 764 ips
 Day 24 part 2: 3 ms,     [*---------] 284 ips
@@ -79,8 +79,8 @@ Day 25 part 1: 1045 ns,  [----------] 955076 ips
 Day 25 part 2: 19 ns,    [----------] 51819927 ips
 Total parse : 6 ms
 Total part 1: 13 ms
-Total part 2: 102 ms
-Total AOC   : 122 ms
+Total part 2: 91 ms
+Total AOC   : 111 ms
 ```
 
 ```
