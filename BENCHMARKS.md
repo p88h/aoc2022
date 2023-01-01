@@ -132,9 +132,9 @@ Day 14 part 2: 295 µs,   [----------] 3379 ips
 Day 15 parser: 1 ms,     [*---------] 532 ips
 Day 15 part 1: 333 ns,   [----------] 2999455 ips
 Day 15 part 2: 2 µs,     [----------] 427919 ips
-Day 16 parser: 2 ms,     [*---------] 334 ips
-Day 16 part 1: 6 ms,     [**--------] 161 ips
-Day 16 part 2: 40 ms,    [******----] 24 ips
+Day 16 parser: 3 ms,	 [*---------] 327 ips
+Day 16 part 1: 607 µs,	 [----------] 1644 ips
+Day 16 part 2: 16 ms,	 [***-------] 62 ips
 Day 17 parser: 41 ns,    [----------] 23887249 ips
 Day 17 part 1: 439 µs,   [----------] 2276 ips
 Day 17 part 2: 413 µs,   [----------] 2420 ips
@@ -163,7 +163,7 @@ Day 25 parser: 56 ns,    [----------] 17855576 ips
 Day 25 part 1: 1 µs,     [----------] 573201 ips
 Day 25 part 2: 22 ns,    [----------] 44490253 ips
 Total parse : 8 ms
-Total part 1: 26 ms
-Total part 2: 168 ms
-Total AOC   : 203 ms
+Total part 1: 20 ms
+Total part 2: 144 ms
+Total AOC   : 173 ms
 ```
