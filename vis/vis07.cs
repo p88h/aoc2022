@@ -1,6 +1,5 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 
 namespace aoc2022 {
     public class Vis07 : Solution {
@@ -33,10 +32,10 @@ namespace aoc2022 {
                 if (node.parent == null) {
                     start[0] = end[0] = 0;
                 } else {
-                    end[node.index] = start[node.index] = end[node.parent.index];                    
+                    end[node.index] = start[node.index] = end[node.parent.index];
                     end[node.parent.index] += (node.size + 1599) / 1600;
                 }
-                colors[node.index] = new Color(128+rnd.Next(128),128+rnd.Next(128),128+rnd.Next(128),255);
+                colors[node.index] = new Color(128 + rnd.Next(128), 128 + rnd.Next(128), 128 + rnd.Next(128), 255);
             }
             long freeSpace = 70000000 - solver.allNodes[0].size;
             long minNeeded = 30000000 - freeSpace;
@@ -46,22 +45,22 @@ namespace aoc2022 {
             getAllFiles(min, toRemove);
             int startRemoveAt = solver.allNodes.Count + 30;
 
-            renderer.loop(cnt => { 
-                for (int i = 0; i < cnt && i < solver.allNodes.Count; i ++) {
+            renderer.loop(cnt => {
+                for (int i = 0; i < cnt && i < solver.allNodes.Count; i++) {
                     Day07.Node node = solver.allNodes[i];
                     if (node.entries.Count > 0) continue;
-                    for (int j = 0; j < (node.size + 1599)/1600; j++) {
+                    for (int j = 0; j < (node.size + 1599) / 1600; j++) {
                         long cx = (start[node.index] + j) % 256;
                         long cy = (start[node.index] + j) / 256;
-                        DrawRectangle((int)cx*5,40+(int)cy*5,4,4,colors[node.index]);
+                        DrawRectangle((int)cx * 5, 40 + (int)cy * 5, 4, 4, colors[node.index]);
                     }
                 }
                 if (cnt < solver.allNodes.Count) {
-                    renderer.WriteXY(0,0, "ls " + path(solver.allNodes[cnt]) + " : " + solver.allNodes[cnt].size);
+                    renderer.WriteXY(0, 0, "ls " + path(solver.allNodes[cnt]) + " : " + solver.allNodes[cnt].size);
                 } else if (cnt > startRemoveAt && cnt < startRemoveAt + toRemove.Count) {
                     int idx = toRemove[cnt - startRemoveAt];
-                    renderer.WriteXY(0,0, "rm " + path(solver.allNodes[idx]));
-                    colors[idx] = BLACK;
+                    renderer.WriteXY(0, 0, "rm " + path(solver.allNodes[idx]));
+                    colors[idx] = Color.Black;
                 }
                 return cnt > startRemoveAt + toRemove.Count + 30;
             });

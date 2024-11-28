@@ -1,6 +1,5 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 using System.Numerics;
 
 namespace aoc2022 {
@@ -16,7 +15,7 @@ namespace aoc2022 {
             }
 
             public void render(int frame) {
-                DrawRectangle(px, py, 100, 20, ColorAlpha(WHITE, alpha));
+                DrawRectangle(px, py, 100, 20, ColorAlpha(Color.White, alpha));
             }
         }
 
@@ -73,13 +72,13 @@ namespace aoc2022 {
                 int cx = px;
                 int cy = py;
 
-                DrawEllipse(cx, cy, width, height, WHITE);
+                DrawEllipse(cx, cy, width, height, Color.White);
                 int fy = cy - height - 10;
-                DrawCircle(cx, fy, 10, WHITE);
-                DrawCircle(cx - 4, fy - 2, 2, BLACK);
-                DrawCircle(cx + 4, fy - 2, 2, BLACK);
+                DrawCircle(cx, fy, 10, Color.White);
+                DrawCircle(cx - 4, fy - 2, 2, Color.Black);
+                DrawCircle(cx + 4, fy - 2, 2, Color.Black);
                 int hy = fy - 10;
-                DrawTriangle(new Vector2(cx - 5, hy), new Vector2(cx + 5, hy), new Vector2(cx, hy - 10), GREEN);
+                DrawTriangle(new Vector2(cx - 5, hy), new Vector2(cx + 5, hy), new Vector2(cx, hy - 10), Color.Green);
 
                 int ly = cy + height - 2;
                 int ly2 = ly + height / 2;
@@ -88,37 +87,37 @@ namespace aoc2022 {
                 if (moving) {
                     if ((frame / 5) % 2 == 0) rfx += 3; else lfx += 3;
                 }
-                DrawLine(lfx - 2, ly3, lfx, ly3, WHITE);
-                DrawLine(lfx, ly3, cx - 8, ly2, WHITE);
-                DrawLine(cx - 8, ly2, cx, ly, WHITE);
+                DrawLine(lfx - 2, ly3, lfx, ly3, Color.White);
+                DrawLine(lfx, ly3, cx - 8, ly2, Color.White);
+                DrawLine(cx - 8, ly2, cx, ly, Color.White);
 
-                DrawLine(rfx, ly3, rfx + 2, ly3, WHITE);
-                DrawLine(rfx, ly3, cx + 8, ly2, WHITE);
-                DrawLine(cx + 8, ly2, cx, ly, WHITE);
+                DrawLine(rfx, ly3, rfx + 2, ly3, Color.White);
+                DrawLine(rfx, ly3, cx + 8, ly2, Color.White);
+                DrawLine(cx + 8, ly2, cx, ly, Color.White);
 
                 int bmx = ((frame / 7) % 2 == 0) ? -2 : 2;
                 int lx = cx - width + 2;
                 if (px > dx && cleaning) {
-                    DrawLine(lx, cy, lx - 10, cy, WHITE);
-                    DrawLine(lx - 10, cy, lx - 12, cy + 2, WHITE);
+                    DrawLine(lx, cy, lx - 10, cy, Color.White);
+                    DrawLine(lx - 10, cy, lx - 12, cy + 2, Color.White);
                     // broom
-                    DrawLine(lx - 12, cy + 2, lx - 12 + bmx, ly3 - 3, BLUE);
-                    DrawRectangle(lx - 18 + bmx, ly3 - 3, 12, 3, BLUE);
+                    DrawLine(lx - 12, cy + 2, lx - 12 + bmx, ly3 - 3, Color.Blue);
+                    DrawRectangle(lx - 18 + bmx, ly3 - 3, 12, 3, Color.Blue);
                 } else {
-                    DrawLine(lx, cy, lx - 4, cy + 6, WHITE);
-                    DrawLine(lx - 4, cy + 6, lx - 4, cy + 10, WHITE);
+                    DrawLine(lx, cy, lx - 4, cy + 6, Color.White);
+                    DrawLine(lx - 4, cy + 6, lx - 4, cy + 10, Color.White);
                 }
 
                 int rx = cx + width - 2;
                 if (px < dx && cleaning) {
-                    DrawLine(rx, cy, rx + 10, cy, WHITE);
-                    DrawLine(rx + 10, cy, rx + 12, cy + 2, WHITE);
+                    DrawLine(rx, cy, rx + 10, cy, Color.White);
+                    DrawLine(rx + 10, cy, rx + 12, cy + 2, Color.White);
                     // broom
-                    DrawLine(rx + 12, cy + 2, rx + 12 + bmx, ly3 - 3, BLUE);
-                    DrawRectangle(rx + 6 + bmx, ly3 - 3, 12, 3, BLUE);
+                    DrawLine(rx + 12, cy + 2, rx + 12 + bmx, ly3 - 3, Color.Blue);
+                    DrawRectangle(rx + 6 + bmx, ly3 - 3, 12, 3, Color.Blue);
                 } else {
-                    DrawLine(rx, cy, rx + 4, cy + 6, WHITE);
-                    DrawLine(rx + 4, cy + 6, rx + 4, cy + 10, WHITE);
+                    DrawLine(rx, cy, rx + 4, cy + 6, Color.White);
+                    DrawLine(rx + 4, cy + 6, rx + 4, cy + 10, Color.White);
                 }
                 return true;
             }

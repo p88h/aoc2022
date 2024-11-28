@@ -1,7 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.ShaderUniformDataType;
 
 namespace aoc2022 {
     public struct Light {
@@ -52,18 +51,18 @@ namespace aoc2022 {
 
         public static void UpdateLightValues(Shader shader, Light light) {
             // Send to shader light enabled state and type
-            Raylib.SetShaderValue(shader, light.enabledLoc, light.enabled ? 1 : 0, SHADER_UNIFORM_INT);
-            Raylib.SetShaderValue(shader, light.typeLoc, (int)light.type, SHADER_UNIFORM_INT);
+            Raylib.SetShaderValue(shader, light.enabledLoc, light.enabled ? 1 : 0, ShaderUniformDataType.Int);
+            Raylib.SetShaderValue(shader, light.typeLoc, (int)light.type, ShaderUniformDataType.Int);
 
             // Send to shader light target position values
-            Raylib.SetShaderValue(shader, light.posLoc, light.position, SHADER_UNIFORM_VEC3);
+            Raylib.SetShaderValue(shader, light.posLoc, light.position, ShaderUniformDataType.Vec3);
 
             // Send to shader light target position values
-            Raylib.SetShaderValue(shader, light.targetLoc, light.target, SHADER_UNIFORM_VEC3);
+            Raylib.SetShaderValue(shader, light.targetLoc, light.target, ShaderUniformDataType.Vec3);
 
             // Send to shader light color values
-            float[] color = new[] { (float)light.color.r / (float)255, (float)light.color.g / (float)255, (float)light.color.b / (float)255, (float)light.color.a / (float)255 };
-            Raylib.SetShaderValue(shader, light.colorLoc, color, SHADER_UNIFORM_VEC4);
+            float[] color = new[] { (float)light.color.R / (float)255, (float)light.color.G / (float)255, (float)light.color.B / (float)255, (float)light.color.A / (float)255 };
+            Raylib.SetShaderValue(shader, light.colorLoc, color, ShaderUniformDataType.Vec4);
         }
     }
 }

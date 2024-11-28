@@ -1,9 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-using static Raylib_cs.MaterialMapIndex;
 
 namespace aoc2022 {
     public class Vis21 : Solution {
@@ -27,7 +24,7 @@ namespace aoc2022 {
             private Dictionary<string, Day21.Monkey> data;
             ASCIIRay renderer;
             public int ymax = 0, xmax = 156;
-            
+
 
             public Simulator(string from, Day21 solver, ASCIIRay renderer, string tag, int ypos) {
                 start = from;
@@ -79,35 +76,35 @@ namespace aoc2022 {
             Model model = LoadModel("resources/CartoonMonkeyModel.obj");
             renderer.viewer.setupLights(10, 4, 4, new List<Model> { model });
             Texture2D texture = LoadTexture("resources/Monkey_Diffuse.png");
-            SetMaterialTexture(ref model, 0, MATERIAL_MAP_DIFFUSE, ref texture);
+            SetMaterialTexture(ref model, 0, MaterialMapIndex.Diffuse, ref texture);
 
-            camera.target = new Vector3(14.5f, 4.0f, 0.0f);
-            camera.position = new Vector3(15.0f, 12.0f, 19.0f);
-            camera.up = new Vector3(0.0f, 1.0f, 0.0f);
-            camera.fovy = 45.0f;
-            camera.projection = CAMERA_PERSPECTIVE;
-            SetCameraMode(camera, CameraMode.CAMERA_FREE);
+            camera.Target = new Vector3(14.5f, 4.0f, 0.0f);
+            camera.Position = new Vector3(15.0f, 12.0f, 19.0f);
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);
+            camera.FovY = 45.0f;
+            camera.Projection = CameraProjection.Perspective;
+            UpdateCamera(ref camera, CameraMode.Free);
             int factor = 60;
-            renderer.loop(cnt => {                
+            renderer.loop(cnt => {
                 float pz0 = (float)Math.Sin(Math.PI * (cnt % factor) / factor);
                 BeginMode3D(camera);
-                DrawModelEx(model, new Vector3((cnt / 100.0f) - 2, pz0 - 6.0f, 0), new Vector3(0,1,0), (float) cnt, new Vector3(0.16f, 0.16f, 0.16f), WHITE);
+                DrawModelEx(model, new Vector3((cnt / 100.0f) - 2, pz0 - 6.0f, 0), new Vector3(0, 1, 0), (float)cnt, new Vector3(0.16f, 0.16f, 0.16f), Color.White);
                 EndMode3D();
                 bool done1 = left.step(cnt, 0);
                 bool done2 = right.step(cnt, left.ymax + 2);
                 if (done1 && done2) {
                     var (lh, lv) = solver.compute(solver.data["root"].left);
                     var (rh, rv) = solver.compute(solver.data["root"].right);
-                    string ll = (lh != 0) ? "H*" + lh.ToString() + " + " + lv.ToString()  : lv.ToString();
-                    string rl = (rh != 0) ? "H*" + rh.ToString() + " + " + rv.ToString()  : rv.ToString();
+                    string ll = (lh != 0) ? "H*" + lh.ToString() + " + " + lv.ToString() : lv.ToString();
+                    string rl = (rh != 0) ? "H*" + rh.ToString() + " + " + rv.ToString() : rv.ToString();
                     renderer.WriteXY(0, right.ymax, ll + " == " + rl);
                     if (cnt > maxcnt - 240) {
                         if (rh != 0) (lv, rv) = (rv, lv);
-                        renderer.WriteXY(0, right.ymax+1, "H == ("+ rv.ToString() + " - " +  lv.ToString() + ") / " + (lh+rh).ToString());
+                        renderer.WriteXY(0, right.ymax + 1, "H == (" + rv.ToString() + " - " + lv.ToString() + ") / " + (lh + rh).ToString());
                     }
                     if (cnt > maxcnt - 180) {
                         var ret = (lh != 0) ? ((rv - lv) / lh) : ((lv - rv) / rh);
-                        renderer.WriteXY(0, right.ymax+2, "H == " + Math.Round(ret).ToString());
+                        renderer.WriteXY(0, right.ymax + 2, "H == " + Math.Round(ret).ToString());
                     }
                     if (maxcnt > cnt + 300) maxcnt = cnt + 300;
                 }

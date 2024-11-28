@@ -1,9 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-
 
 namespace aoc2022 {
     public class Vis18 : Solution {
@@ -20,24 +17,24 @@ namespace aoc2022 {
             var ret = solver.part2();
             Viewer viewer = new Viewer(1920, 1080, 60, "Day18");
             Camera3D camera = new Camera3D();
-            camera.up = new Vector3(0.0f, 1.0f, 0.0f);
-            camera.target = new Vector3(solver.max / 2, solver.max / 2, solver.max / 2);
-            camera.fovy = 45.0f;
-            camera.projection = CAMERA_PERSPECTIVE;
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);
+            camera.Target = new Vector3(solver.max / 2, solver.max / 2, solver.max / 2);
+            camera.FovY = 45.0f;
+            camera.Projection = CameraProjection.Perspective;
             Model cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
             viewer.setupLights(25, 25, 25, new List<Model> { cube });
             viewer.loop(cnt => {
-                camera.position = new Vector3((float)Math.Cos(cnt / 300.0f) * solver.max + solver.max / 2,
+                camera.Position = new Vector3((float)Math.Cos(cnt / 300.0f) * solver.max + solver.max / 2,
                                               solver.max * 2,
                                               (float)Math.Sin(cnt / 300.0f) * solver.max + solver.max / 2);
                 BeginMode3D(camera);
                 for (int idx = cnt * 8; idx < solver.trace.Count; idx++) {
                     var (x, y, z) = solver.trace[idx];
-                    DrawModel(cube, new Vector3(x, z, y), 1.0f, LIGHTGRAY);
+                    DrawModel(cube, new Vector3(x, z, y), 1.0f, Color.LightGray);
                 }
                 for (int idx = 0; idx < solver.cubes.Count; idx++) {
                     var (x, y, z) = (solver.cubes[idx][0], solver.cubes[idx][1], solver.cubes[idx][2]);
-                    DrawModel(cube, new Vector3(x, z, y), 1.0f, RED);
+                    DrawModel(cube, new Vector3(x, z, y), 1.0f, Color.Red);
                 }
                 EndMode3D();
                 return cnt > solver.trace.Count / 8 + 60;

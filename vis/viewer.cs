@@ -2,13 +2,6 @@ using System.Diagnostics;
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Raymath;
-using static Raylib_cs.Color;
-using static Raylib_cs.ConfigFlags;
-using static Raylib_cs.CameraMode;
-using static Raylib_cs.CameraProjection;
-using static Raylib_cs.KeyboardKey;
-using static Raylib_cs.ShaderLocationIndex;
 
 namespace aoc2022 {
 
@@ -27,7 +20,7 @@ namespace aoc2022 {
         public Viewer(int w, int h, int fps, string t) {
             Console.WriteLine("Initializing viewer: " + w + "x" + h + " @" + fps + "fps");
             width = w; height = h; title = t;
-            SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT);
+            SetConfigFlags(ConfigFlags.Msaa4xHint);
             InitWindow(width, height, "AOC2022 " + title);
             SetTargetFPS(fps);
             ff_writer = new FFWriter(width, height, fps, title);
@@ -36,17 +29,17 @@ namespace aoc2022 {
         public void setupLights(float xmax, float ymax, float zmax, List<Model> models) {
             shader = LoadShader("resources/lighting.vs", "resources/lighting.fs");
             unsafe {
-                shader.locs[(int)SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
+                shader.Locs[(int)ShaderLocationIndex.VectorView] = GetShaderLocation(shader, "viewPos");
             }
             int ambientLoc = GetShaderLocation(shader, "ambient");
             float[] ambient = new[] { 0.1f, 0.1f, 0.1f, 1.0f };
-            Raylib.SetShaderValue(shader, ambientLoc, ambient, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
-            lights[0] = Rlights.CreateLight(0, LightType.LIGHT_POINT, new Vector3(-10, zmax + 10, ymax + 10), Vector3.Zero, WHITE, shader);
-            lights[1] = Rlights.CreateLight(3, LightType.LIGHT_POINT, new Vector3(0, 100, 0), Vector3.Zero, WHITE, shader);
-            // lights[2] = Rlights.CreateLight(1, LightType.LIGHT_POINT, new Vector3(xmax + 10, zmax + 10, ymax + 10), Vector3.Zero, RAYWHITE, shader);
-            // lights[3] = Rlights.CreateLight(2, LightType.LIGHT_POINT, new Vector3(xmax / 2, zmax + 10, -10), Vector3.Zero, YELLOW, shader);
+            Raylib.SetShaderValue(shader, ambientLoc, ambient, ShaderUniformDataType.Vec4);
+            lights[0] = Rlights.CreateLight(0, LightType.LIGHT_POINT, new Vector3(-10, zmax + 10, ymax + 10), Vector3.Zero, Color.White, shader);
+            lights[1] = Rlights.CreateLight(3, LightType.LIGHT_POINT, new Vector3(0, 100, 0), Vector3.Zero, Color.White, shader);
+            // lights[2] = Rlights.CreateLight(1, LightType.LIGHT_POINT, new Vector3(xmax + 10, zmax + 10, ymax + 10), Vector3.Zero, Color.RayWhite, shader);
+            // lights[3] = Rlights.CreateLight(2, LightType.LIGHT_POINT, new Vector3(xmax / 2, zmax + 10, -10), Vector3.Zero, Color.Yellow, shader);
             unsafe {
-                foreach (var model in models) model.materials[0].shader = shader;
+                foreach (var model in models) model.Materials[0].Shader = shader;
             }
         }
 
@@ -59,14 +52,14 @@ namespace aoc2022 {
             long lastcnt = 0;
             while (!WindowShouldClose() && !done) {
                 BeginDrawing();
-                ClearBackground(BLACK);
+                ClearBackground(Color.Black);
                 done = renderFrame(cnt++);
                 EndDrawing();
                 if (ViewerOptions.recordVideo) {
                     Image screen = LoadImageFromScreen();
                     unsafe {
-                        ff_writer.addRawImage(screen.data);
-                        MemFree(screen.data);
+                        ff_writer.addRawImage(screen.Data);
+                        MemFree(screen.Data);
                     }
                 }
                 long ts = stopwatch.ElapsedMilliseconds;

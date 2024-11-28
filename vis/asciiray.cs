@@ -1,6 +1,5 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 using System.Numerics;
 using System.Net;
 
@@ -8,7 +7,7 @@ namespace aoc2022 {
     public class ASCIIRay {
         int cx = 0, cy = 0, fsize, rows, cols;
         Font font;
-        Color color = RAYWHITE;
+        Color color = Color.RayWhite;
         const string font_name = "Inconsolata-SemiBold.ttf";
         const string font_file = "resources/" + font_name;
         const string font_uri = "https://github.com/googlefonts/Inconsolata/raw/main/fonts/ttf/" + font_name;
@@ -44,7 +43,7 @@ namespace aoc2022 {
             color = new Color(r, g, b, a);
         }
 
-        public void loop(Func<int, bool> renderFrame) { 
+        public void loop(Func<int, bool> renderFrame) {
             viewer.loop(renderFrame);
         }
     }

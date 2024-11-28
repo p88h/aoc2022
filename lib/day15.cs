@@ -39,17 +39,17 @@ namespace aoc2022 {
             return tot.ToString();
         }
 
-        public struct diagonal { public int index, start, width, parity; }
+        public struct Diagonal { public int index, start, width, parity; }
         public string part2() {
             int range = 4000000;
-            var diags = new List<diagonal>();
+            var diags = new List<Diagonal>();
             foreach (var sensor in data) {
                 int lp = sensor.sx + sensor.sy - sensor.dist; // left or top most diagonal
                 int dp = sensor.sx + sensor.sy + sensor.dist; // bottom or right most diagonal
                 int sp = sensor.sx - sensor.sy - sensor.dist; // diag-rotated start point (same for both)
                 int pp = (sensor.sx + sensor.sy) % 2; // parity of the center = rows with 'full' diamond.
-                diags.Add(new diagonal { index = lp * 2, start = sp, width = sensor.dist, parity = pp });
-                diags.Add(new diagonal { index = dp * 2 + 1, start = sp, width = sensor.dist, parity = pp });
+                diags.Add(new Diagonal { index = lp * 2, start = sp, width = sensor.dist, parity = pp });
+                diags.Add(new Diagonal { index = dp * 2 + 1, start = sp, width = sensor.dist, parity = pp });
             }
             diags.Sort((a, b) => a.index - b.index);
             var ranges = new List<int>();

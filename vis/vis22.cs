@@ -1,10 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-using static Raylib_cs.MaterialMapIndex;
-using static Raylib_cs.ShaderLocationIndex;
 
 namespace aoc2022 {
     public class Vis22 : Day22 {
@@ -72,36 +68,36 @@ namespace aoc2022 {
             Camera3D camera = new Camera3D();
             List<Model> sides = new List<Model>();
 
-            camera.target = new Vector3(0, 0, 0);
-            camera.position = orbital(85, 85, 0, 0, 0, 20);
-            camera.up = new Vector3(0, 1, 0);
-            camera.fovy = 45.0f;
-            camera.projection = CAMERA_PERSPECTIVE;
-            SetCameraMode(camera, CameraMode.CAMERA_CUSTOM);
+            camera.Target = new Vector3(0, 0, 0);
+            camera.Position = orbital(85, 85, 0, 0, 0, 20);
+            camera.Up = new Vector3(0, 1, 0);
+            camera.FovY = 45.0f;
+            camera.Projection = CameraProjection.Perspective;
+            UpdateCamera(ref camera, CameraMode.Custom);
             List<RenderTexture2D> textures = new List<RenderTexture2D>();
             Model model = LoadModel("resources/cube.obj");
             for (int i = 0; i < 6; i++) {
                 RenderTexture2D rtex = LoadRenderTexture(50 * 24, 50 * 24);
                 textures.Add(rtex);
-                SetMaterialTexture(ref model, i, MATERIAL_MAP_DIFFUSE, ref rtex.texture);
+                SetMaterialTexture(ref model, i, MaterialMapIndex.Diffuse, ref rtex.Texture);
             }
             sides.Add(model);
             var shader = LoadShader("resources/lighting.vs", "resources/lighting.fs");
             unsafe {
-                shader.locs[(int)SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
+                shader.Locs[(int)ShaderLocationIndex.VectorView] = GetShaderLocation(shader, "viewPos");
             }
             int ambientLoc = GetShaderLocation(shader, "ambient");
             float[] ambient = new[] { 0.4f, 0.4f, 0.4f, 1.0f };
-            Raylib.SetShaderValue(shader, ambientLoc, ambient, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
+            Raylib.SetShaderValue(shader, ambientLoc, ambient, ShaderUniformDataType.Vec4);
             Light[] lights = new Light[6];
             for (int i = 0; i < 6; i++) {
                 var (phi, theta) = side_angle(i);
                 var lightPos = orbital(phi, theta, 0, 0, 0, 30);
                 var targetPos = orbital(phi, theta, 0, 0, 0, 5);
-                lights[i] = Rlights.CreateLight(i, LightType.LIGHT_POINT, lightPos, targetPos, RAYWHITE, shader);
+                lights[i] = Rlights.CreateLight(i, LightType.LIGHT_POINT, lightPos, targetPos, Color.RayWhite, shader);
             }
             unsafe {
-                for (int i = 0; i < 6; i++) model.materials[i].shader = shader;
+                for (int i = 0; i < 6; i++) model.Materials[i].Shader = shader;
             }
             List<(int, int)> texpos = new List<(int, int)> { (50, 0), (100, 0), (50, 50), (0, 100), (50, 100), (0, 150) };
             int last_side = 0, current_side = 0;
@@ -122,8 +118,8 @@ namespace aoc2022 {
                         }
                     } else if (cnt > 0) continue;
                     BeginTextureMode(textures[i]);
-                    ClearBackground(BLACK);
-                    DrawRectangleLines(0, 0, 50 * 24, 50 * 24, WHITE);
+                    ClearBackground(Color.Black);
+                    DrawRectangleLines(0, 0, 50 * 24, 50 * 24, Color.White);
                     for (int ty = 0; ty < 50; ty++) for (int tx = 0; tx < 50; tx++) {
                             char ch = mapp[ty + texpos[i].Item2, tx + texpos[i].Item1];
                             if ((ty + texpos[i].Item2, tx + texpos[i].Item1) == (y, x)) {
@@ -137,11 +133,11 @@ namespace aoc2022 {
                 if (current_angle != target_angle) {
                     current_angle.Item1 = turn(current_angle.Item1, target_angle.Item1);
                     current_angle.Item2 = turn(current_angle.Item2, target_angle.Item2);
-                    camera.position = orbital(current_angle.Item1, current_angle.Item2, 0, 0, 0, 20);
-                    UpdateCamera(ref camera);
+                    camera.Position = orbital(current_angle.Item1, current_angle.Item2, 0, 0, 0, 20);
+                    UpdateCamera(ref camera, CameraMode.Custom);
                 }
                 BeginMode3D(camera);
-                DrawModelEx(sides[0], new Vector3(0, 0, 0), new Vector3(0,1,0), 0, new Vector3(1, 1, 1), WHITE);
+                DrawModelEx(sides[0], new Vector3(0, 0, 0), new Vector3(0, 1, 0), 0, new Vector3(1, 1, 1), Color.White);
                 EndMode3D();
                 if (sleep <= maxsleep) {
                     sleep++;

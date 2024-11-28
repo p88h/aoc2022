@@ -1,9 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-
 
 namespace aoc2022 {
     public class Vis12 : Solution {
@@ -25,9 +22,9 @@ namespace aoc2022 {
                 path.Add((cx, cy));
             }
             path.Reverse();
-            camera.up = new Vector3(0.0f, 1.0f, 0.0f);
-            camera.fovy = 45.0f;
-            camera.projection = CAMERA_PERSPECTIVE;
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);
+            camera.FovY = 45.0f;
+            camera.Projection = CameraProjection.Perspective;
             int factor = 10;
             int maxcnt = path.Count * factor + 400;
             float rot = 0.0f;
@@ -46,12 +43,12 @@ namespace aoc2022 {
                 float px = (px1 * (factor - ofs) + px2 * ofs) / (float)factor;
                 float py = (py1 * (factor - ofs) + py2 * ofs) / (float)factor;
                 float pz = 0.5f * (pz1 * (factor - ofs) + pz2 * ofs) / (float)factor;
-                camera.target = new Vector3(px, pz, py);
+                camera.Target = new Vector3(px, pz, py);
                 if (idx < path.Count - 1) {
-                    camera.position = new Vector3(px - 2, 62.0f, py + solver.h);
+                    camera.Position = new Vector3(px - 2, 62.0f, py + solver.h);
                     pz += (float)Math.Sin(Math.PI * ofs / factor);
                 } else {
-                    camera.position = new Vector3(px - 2 + rot, 62.0f - rot, py + solver.h - rot);
+                    camera.Position = new Vector3(px - 2 + rot, 62.0f - rot, py + solver.h - rot);
                     if (rot < 30.0f) {
                         rot += 1.0f / (float)factor;
                     } else if (rot < 33.0f) {
@@ -59,7 +56,7 @@ namespace aoc2022 {
                     }
                 }
                 BeginMode3D(camera);
-                DrawModel(sphere, new Vector3(px, pz + 0.5f, py), 0.5f, BLUE);
+                DrawModel(sphere, new Vector3(px, pz + 0.5f, py), 0.5f, Color.Blue);
                 for (int x = 0; x < solver.w; x++) {
                     for (int y = 0; y < solver.h; y++) {
                         int elev = solver.map[x, y] - 'a'; // 0-25

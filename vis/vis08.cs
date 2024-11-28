@@ -1,9 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-using static Raylib_cs.CameraProjection;
-
 
 namespace aoc2022 {
     public class Vis08 : Solution {
@@ -20,10 +17,10 @@ namespace aoc2022 {
         public string part2() {
             ASCIIRay renderer = new ASCIIRay(1280, 720, 30, 24, "Day08");
             Camera3D camera = new Camera3D();
-            camera.target = new Vector3(50.0f, 0.0f, 50.0f);
-            camera.up = new Vector3(0.0f, 1.0f, 0.0f);
-            camera.fovy = 45.0f;
-            camera.projection = CAMERA_PERSPECTIVE;
+            camera.Target = new Vector3(50.0f, 0.0f, 50.0f);
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);
+            camera.FovY = 45.0f;
+            camera.Projection = CameraProjection.Perspective;
             List<int[]> data = solver.data;
             List<Color[]> colors = new List<Color[]>();
             int dim = data.Count;
@@ -33,7 +30,7 @@ namespace aoc2022 {
             }
 
             renderer.loop(cnt => {
-                camera.position = new Vector3((float)Math.Cos(cnt / 300.0f) * 90.0f + 50, 
+                camera.Position = new Vector3((float)Math.Cos(cnt / 300.0f) * 90.0f + 50,
                                               (float)Math.Cos(cnt / 150.0f) * 10.0f + 10.0f,
                                               (float)Math.Sin(cnt / 300.0f) * 90.0f + 50.0f);
                 BeginMode3D(camera);
@@ -54,12 +51,12 @@ namespace aoc2022 {
                             if (d > 1.0f) d = 1.0f;
                             if (d < 0.3f) d = 0.3f;
                             DrawCylinder(new Vector3(i, b, j), 0.1f, d, r, 6, colors[i][j]);
-                            DrawCylinderWires(new Vector3(i, b, j), 0.1f, d, r, 6, DARKGRAY);
+                            DrawCylinderWires(new Vector3(i, b, j), 0.1f, d, r, 6, Color.DarkGray);
                             b += r;
                             h -= r;
                         }
-                        DrawCylinder(new Vector3(i, 0, j), 0.2f, 0.2f, stump, 8, BROWN);
-                        DrawCylinderWires(new Vector3(i, 0, j), 0.2f, 0.2f, stump, 8, BLACK);
+                        DrawCylinder(new Vector3(i, 0, j), 0.2f, 0.2f, stump, 8, Color.Brown);
+                        DrawCylinderWires(new Vector3(i, 0, j), 0.2f, 0.2f, stump, 8, Color.Black);
                     }
                 }
                 if (cnt >= 300 && cnt < 300 + dim) {

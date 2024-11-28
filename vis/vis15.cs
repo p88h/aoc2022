@@ -1,6 +1,5 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 using System.Numerics;
 
 namespace aoc2022 {
@@ -44,7 +43,7 @@ namespace aoc2022 {
             foreach (var p in solver.data) scanners.Add(new Scanner(p.sx + ofsx, p.sy + ofsy, p.bx + ofsx, p.by + ofsy));
             renderer.loop(cnt => {
                 foreach (var s in scanners) s.step();
-                DrawRectangleLines(ofsx / scale, ofsy / scale, 1000, 1000, GREEN);
+                DrawRectangleLines(ofsx / scale, ofsy / scale, 1000, 1000, Color.Green);
                 return cnt > 1000;
             });
             return "";

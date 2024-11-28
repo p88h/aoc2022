@@ -1,5 +1,5 @@
+using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 
 namespace aoc2022 {
     public class Vis09 : Solution {
@@ -20,17 +20,17 @@ namespace aoc2022 {
             for (int k = 0; pos < solver.data.Length && k < speed; k++, pos += 2) segments[0].move(solver.data[pos + 1], solver.data[pos]);
             foreach (int p in visited1) {
                 int cy = p / 1000, cx = p % 1000;
-                DrawRectangle(cx * 3 - 500, cy * 3 - 100, 4, 4, DARKGRAY);
+                DrawRectangle(cx * 3 - 500, cy * 3 - 100, 4, 4, Color.DarkGray);
             }
             foreach (int p in visited2) {
                 int cy = p / 1000, cx = p % 1000;
-                DrawRectangle(cx * 3 - 500, cy * 3 - 100, 4, 4, LIGHTGRAY);
+                DrawRectangle(cx * 3 - 500, cy * 3 - 100, 4, 4, Color.LightGray);
             }
-            foreach (var seg in segments) DrawCircle(seg.cx * 3 - 500, seg.cy * 3 - 100, 3, RAYWHITE);
-            renderer.WriteXY(2,1,"Visited [1]: " + visited1.Count);
-            renderer.WriteXY(2,2,"Visited [2]: " + visited2.Count);
-            renderer.WriteXY(2,3,"Speed: " + speed + " cells/frame");
-            renderer.WriteXY(2,4,"Moves: " + pos + " / " + solver.data.Length);
+            foreach (var seg in segments) DrawCircle(seg.cx * 3 - 500, seg.cy * 3 - 100, 3, Color.RayWhite);
+            renderer.WriteXY(2, 1, "Visited [1]: " + visited1.Count);
+            renderer.WriteXY(2, 2, "Visited [2]: " + visited2.Count);
+            renderer.WriteXY(2, 3, "Speed: " + speed + " cells/frame");
+            renderer.WriteXY(2, 4, "Moves: " + pos + " / " + solver.data.Length);
             return (idx > solver.data.Length / 5);
         }
 

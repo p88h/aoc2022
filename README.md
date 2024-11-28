@@ -56,6 +56,8 @@ $ dotnet run -c Release vis 03 rec
 
 This requires FFMPEG and a bit of luck (seems to work fine under Linux/WSL2, and not quite fine on OSX)
 
+(Note: recording does not work currently after update to .NET 8, which is likely given the sweeping changes in bitmap handling)
+
 The simplest way to view them is probably on
 [YouTube](https://www.youtube.com/playlist?list=PLgRrl8I0Q168jJYjfbzak3l-9xkLU6bCE)
 

@@ -1,7 +1,5 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
-
 
 namespace aoc2022 {
     public class Vis14 : Solution {
@@ -17,7 +15,7 @@ namespace aoc2022 {
             List<(int, int)> sand = new List<(int, int)>();
             int maxcnt = 1000000;
             int S = 6;
-            Color sandcol = YELLOW;
+            Color sandcol = Color.Yellow;
             int speed = 0;
             bool done = false;
             Console.WriteLine(solver.maxy);
@@ -33,10 +31,10 @@ namespace aoc2022 {
                     int y = Math.Min(sy, ey);
                     int w = (Math.Abs(ex - sx) + 1);
                     int h = (Math.Abs(ey - sy) + 1);
-                    DrawRectangle(x * S, 1080 - y * S - h * S, w * S, h * S, DARKGRAY);
+                    DrawRectangle(x * S, 1080 - y * S - h * S, w * S, h * S, Color.DarkGray);
                 }
             }
-            DrawRectangle(0, 1080 - (solver.maxy + 2) * S - 64, 1920, 64, DARKBROWN);
+            DrawRectangle(0, 1080 - (solver.maxy + 2) * S - 64, 1920, 64, Color.DarkBrown);
             EndTextureMode();
             renderer.loop(cnt => {
                 if (cnt % 60 == 0 && speed < 100) speed++;
@@ -46,11 +44,11 @@ namespace aoc2022 {
                         mapp[x, y] = 'o';
                         if (y > solver.maxy && tot1 == 0) {
                             tot1 = tot2;
-                            sandcol = ORANGE;
+                            sandcol = Color.Orange;
                         }
                         tot2++;
                         BeginTextureMode(background);
-                        DrawCircle(x * S + S / 2, 1080 - y * S - S / 2, S / 2, tot1 > 0 ? ORANGE : YELLOW);
+                        DrawCircle(x * S + S / 2, 1080 - y * S - S / 2, S / 2, tot1 > 0 ? Color.Orange : Color.Yellow);
                         EndTextureMode();
                         if (flow.Count == 0) {
                             done = true;
@@ -58,8 +56,8 @@ namespace aoc2022 {
                             break;
                         }
                     }
-                DrawTexture(background.texture, 0, 0, WHITE);
-                foreach ((var fx, var fy) in flow) DrawRectangleLines(fx * S + S / 4, fy * S + S / 4, S / 2, S / 2, DARKGREEN);
+                DrawTexture(background.Texture, 0, 0, Color.White);
+                foreach ((var fx, var fy) in flow) DrawRectangleLines(fx * S + S / 4, fy * S + S / 4, S / 2, S / 2, Color.DarkGreen);
                 renderer.WriteXY(1, 1, "Grains: " + tot2);
                 if (tot1 > 0) renderer.WriteXY(1, 2, "Part 1: " + tot1);
                 return cnt > maxcnt;

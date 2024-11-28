@@ -1,6 +1,6 @@
 using System.Numerics;
+using Raylib_cs;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Color;
 
 namespace aoc2022 {
     public class Vis23 : Day23 {
@@ -17,11 +17,11 @@ namespace aoc2022 {
                     DrawTriangle(new Vector2((x + xofs) * 7 - 4, (y + yofs) * 7 - 3),
                                  new Vector2((x + xofs) * 7 + 4, (y + yofs) * 7 - 3),
                                  new Vector2((x + xofs) * 7, (y + yofs) * 7 - 9),
-                                 GREEN);
-                    DrawRectangle((x + xofs) * 7 - 1, (y + yofs) * 7 - 10, 2, 2, RED);
-                    DrawCircle((x + xofs) * 7, (y + yofs) * 7, 4, YELLOW);
-                    DrawRectangle((x + xofs) * 7 - 3, (y + yofs) * 7 - 1, 2, 2, BLUE);
-                    DrawRectangle((x + xofs) * 7 + 1, (y + yofs) * 7 - 1, 2, 2, BLUE);
+                                 Color.Green);
+                    DrawRectangle((x + xofs) * 7 - 1, (y + yofs) * 7 - 10, 2, 2, Color.Red);
+                    DrawCircle((x + xofs) * 7, (y + yofs) * 7, 4, Color.Yellow);
+                    DrawRectangle((x + xofs) * 7 - 3, (y + yofs) * 7 - 1, 2, 2, Color.Blue);
+                    DrawRectangle((x + xofs) * 7 + 1, (y + yofs) * 7 - 1, 2, 2, Color.Blue);
 
                 }
                 bool moved = step(pos, 3000 + cnt);

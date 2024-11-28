@@ -1,13 +1,9 @@
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Pipes;
-using FFMpegCore.Extend;
 using System.Collections.Concurrent;
-using Bitmap = System.Drawing.Bitmap;
-using Rectangle = System.Drawing.Rectangle;
-using BitmapData = System.Drawing.Imaging.BitmapData;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
-using ImageLockMode = System.Drawing.Imaging.ImageLockMode;
+using FFMpegCore.Extensions.SkiaSharp;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace aoc2022 {
     class FFWriter {
@@ -24,12 +20,12 @@ namespace aoc2022 {
             filename = title + ".mp4";
         }
 
-        public unsafe void addRawImage(void* data) {        
+        public unsafe void addRawImage(void* data) {
             // Unfortunately, there seems to be no way to 'claim' the pointer, so we copy the data. again.
-            Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppRgb);
-            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
-            Buffer.MemoryCopy(data, bmpData.Scan0.ToPointer(), width * height * 4, width * height * 4);
-            bmp.UnlockBits(bmpData);
+            Bitmap bmp = new Bitmap(width, height, SkiaSharp.SKColorType.Rgb888x, SkiaSharp.SKAlphaType.Unknown);
+            void* ptr = (void*)bmp.GetPixels();
+            Buffer.MemoryCopy(data, ptr, width * height * 4, width * height * 4);
+            bmp.NotifyPixelsChanged();
             _frames.Add(new BitmapVideoFrameWrapper(bmp));
         }
 
